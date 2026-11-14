@@ -1,0 +1,13 @@
+packages:
+  - packages/*
+  - playground/*
+
+# Intended to mitigate supply chain attacks
+minimumReleaseAge: 1440
+verifyDepsBeforeRun: error
+strictDepBuilds: true
+
+allowBuilds:
+  esbuild: true
+  lefthook: true
+  sharp: true

@@ -1,0 +1,50 @@
+{
+	"name": "astro-payload",
+	"version": "0.0.0",
+	"private": true,
+	"type": "module",
+	"description": "Astro packages for sites built on Payload CMS",
+	"keywords": [
+		"astro",
+		"payload",
+		"lexical"
+	],
+	"author": "Alexander Synaptic <x@synapticism.com>",
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/xsynaptic/astro-payload.git"
+	},
+	"packageManager": "pnpm@12.14.0",
+	"engines": {
+		"node": ">=24.0.0"
+	},
+	"scripts": {
+		"build": "pnpm --filter './packages/*' build",
+		"test": "vitest run",
+		"test:watch": "vitest",
+		"test:e2e": "pnpm -r --if-present test:e2e",
+		"check-types": "tsc -p tsconfig.json && pnpm -r check-types",
+		"lint": "eslint --max-warnings 0",
+		"fix": "lefthook run fix",
+		"check": "lefthook run check",
+		"version-packages": "changeset version && pnpm install --ignore-scripts",
+		"release": "node scripts/release.ts"
+	},
+	"devDependencies": {
+		"@changesets/cli": "^3.0.3",
+		"@manypkg/get-packages": "^3.1.0",
+		"@types/node": "^24.19.2",
+		"@xsynaptic/eslint-config": "^6.8.0",
+		"eslint": "^10.14.0",
+		"jiti": "^2.7.0",
+		"knip": "^6.44.1",
+		"lefthook": "^2.2.2",
+		"prettier": "^3.9.10",
+		"prettier-plugin-astro": "^1.1.2",
+		"publint": "^0.3.25",
+		"typescript": "^6.0.3",
+		"typescript-eslint": "^8.72.1",
+		"vitest": "^5.1.0"
+	}
+}
