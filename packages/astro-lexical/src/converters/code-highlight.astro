@@ -1,0 +1,10 @@
+---
+import type { LexicalCodeHighlightNode } from '#schemas/lexical.ts';
+import type { ConverterProps } from '#types.ts';
+
+type Props = ConverterProps<LexicalCodeHighlightNode>;
+
+const { node } = Astro.props;
+---
+
+{node.text}

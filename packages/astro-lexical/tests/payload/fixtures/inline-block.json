@@ -1,0 +1,50 @@
+{
+	"root": {
+		"type": "root",
+		"format": "",
+		"indent": 0,
+		"version": 1,
+		"children": [
+			{
+				"type": "paragraph",
+				"format": "",
+				"indent": 0,
+				"version": 1,
+				"children": [
+					{
+						"mode": "normal",
+						"text": "A synthetic sentence with a ",
+						"type": "text",
+						"style": "",
+						"detail": 0,
+						"format": 0,
+						"version": 1
+					},
+					{
+						"type": "inlineBlock",
+						"fields": {
+							"id": "0123456789abcdef01234567",
+							"tone": "info",
+							"label": "Synthetic badge",
+							"blockType": "badge"
+						},
+						"version": 1
+					},
+					{
+						"mode": "normal",
+						"text": " inside it.",
+						"type": "text",
+						"style": "",
+						"detail": 0,
+						"format": 0,
+						"version": 1
+					}
+				],
+				"direction": null,
+				"textStyle": "",
+				"textFormat": 0
+			}
+		],
+		"direction": null
+	}
+}

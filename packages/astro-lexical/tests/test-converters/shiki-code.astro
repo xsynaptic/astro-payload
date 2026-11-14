@@ -1,0 +1,16 @@
+---
+import { Code } from 'astro:components';
+
+import type { LexicalCodeNode } from '#schemas/lexical.ts';
+import type { ConverterProps } from '#types.ts';
+
+import { getCodeText } from '#converters/code.ts';
+
+type Props = ConverterProps<LexicalCodeNode>;
+
+const { node } = Astro.props;
+
+const lang = node.language === 'javascript' ? 'javascript' : 'plaintext';
+---
+
+<Code code={getCodeText(node)} lang={lang} />

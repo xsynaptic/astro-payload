@@ -1,0 +1,27 @@
+---
+import type { PayloadRelationshipNode } from '#payload/schemas.ts';
+import type { PayloadRichTextConfig } from '#payload/types.ts';
+import type { ConverterProps } from '#types.ts';
+
+import { resolveRelationshipHref } from '#payload/links.ts';
+
+type Props = ConverterProps<PayloadRelationshipNode> & { config: PayloadRichTextConfig };
+
+const { config, node, style } = Astro.props;
+
+const { relationTo, value } = node;
+
+// Payload's admin falls back to the id the same way when a collection sets no `useAsTitle`
+const link = value
+	? {
+			href: await resolveRelationshipHref({ relationTo, value }, config),
+			label: typeof value.title === 'string' && value.title !== '' ? value.title : String(value.id),
+		}
+	: undefined;
+---
+
+{link ? (
+	<p style={style}>
+		<a href={link.href}>{link.label}</a>
+	</p>
+) : undefined}

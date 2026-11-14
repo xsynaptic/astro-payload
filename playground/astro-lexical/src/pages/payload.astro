@@ -1,0 +1,44 @@
+---
+import type { InternalLinkTarget } from '@xsynaptic/astro-lexical/payload';
+
+import { createIssueReporter, LexicalEditorStateSchema } from '@xsynaptic/astro-lexical';
+import { buildInlineBlockConverters, defineBlock } from '@xsynaptic/astro-lexical/payload';
+import { payloadPreset } from '@xsynaptic/astro-lexical/payload/presets';
+import PayloadRichText from '@xsynaptic/astro-lexical/payload/rich-text.astro';
+import { corePreset } from '@xsynaptic/astro-lexical/presets';
+import { z } from 'zod';
+
+import BadgeConverter from '#converters/badge.astro';
+import document from '#documents/payload.json' with { type: 'json' };
+import Layout from '#layouts/layout.astro';
+
+const BadgeFieldsSchema = z.object({
+	blockType: z.literal('badge'),
+	label: z.string(),
+	tone: z.enum(['info', 'warning']).optional(),
+});
+
+const converters = {
+	...corePreset,
+	...payloadPreset,
+	...buildInlineBlockConverters({
+		inlineBlockConverters: { badge: BadgeConverter },
+		inlineBlocks: [defineBlock(BadgeFieldsSchema)],
+	}),
+};
+
+const config = {
+	context: undefined,
+	internalDocToHref: (target: InternalLinkTarget) => `/${target.relationTo}/${String(target.id)}/`,
+	onIssue: createIssueReporter({ strict: true }),
+	siteHref: (href: string) => href,
+};
+---
+
+<Layout title="Payload">
+	<PayloadRichText
+		config={config}
+		converters={converters}
+		data={LexicalEditorStateSchema.parse(document)}
+	/>
+</Layout>

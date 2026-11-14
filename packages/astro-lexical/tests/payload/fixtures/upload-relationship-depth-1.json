@@ -1,0 +1,91 @@
+{
+	"root": {
+		"type": "root",
+		"format": "",
+		"indent": 0,
+		"version": 1,
+		"children": [
+			{
+				"type": "upload",
+				"value": {
+					"id": 274,
+					"alt": "A grey test rectangle",
+					"updatedAt": "2026-11-11T12:50:02.397Z",
+					"createdAt": "2026-11-11T12:50:02.396Z",
+					"url": "/api/media/file/fixture-grey-rectangle.png",
+					"thumbnailURL": "/api/media/file/fixture-grey-rectangle-400x300.png",
+					"filename": "fixture-grey-rectangle.png",
+					"mimeType": "image/png",
+					"filesize": 2804,
+					"width": 800,
+					"height": 600,
+					"focalX": null,
+					"focalY": null,
+					"sizes": {
+						"thumbnail": {
+							"url": "/api/media/file/fixture-grey-rectangle-400x300.png",
+							"width": 400,
+							"height": 300,
+							"mimeType": "image/png",
+							"filesize": 1081,
+							"filename": "fixture-grey-rectangle-400x300.png"
+						}
+					}
+				},
+				"fields": {
+					"credit": "Test credit",
+					"caption": "A synthetic caption"
+				},
+				"format": "",
+				"version": 3,
+				"relationTo": "media"
+			},
+			{
+				"type": "upload",
+				"value": {
+					"id": 275,
+					"updatedAt": "2026-11-11T12:50:02.418Z",
+					"createdAt": "2026-11-11T12:50:02.417Z",
+					"url": "/api/media/file/fixture-schedule.pdf",
+					"thumbnailURL": null,
+					"filename": "fixture-schedule.pdf",
+					"mimeType": "application/pdf",
+					"filesize": 214,
+					"width": null,
+					"height": null,
+					"focalX": null,
+					"focalY": null,
+					"sizes": {
+						"thumbnail": {
+							"url": null,
+							"width": null,
+							"height": null,
+							"mimeType": null,
+							"filesize": null,
+							"filename": null
+						}
+					}
+				},
+				"fields": {},
+				"format": "",
+				"version": 3,
+				"relationTo": "media"
+			},
+			{
+				"type": "relationship",
+				"value": {
+					"id": 40,
+					"title": "A related test post",
+					"slug": "fixture-related-post",
+					"updatedAt": "2026-11-11T12:50:02.425Z",
+					"createdAt": "2026-11-11T12:50:02.425Z",
+					"_status": "published"
+				},
+				"format": "",
+				"version": 2,
+				"relationTo": "posts"
+			}
+		],
+		"direction": null
+	}
+}

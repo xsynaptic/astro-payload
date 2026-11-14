@@ -1,0 +1,14 @@
+---
+import { corePreset } from '#presets.ts';
+import RichText from '#rich-text.astro';
+
+import type { PayloadRichTextProps } from './types.ts';
+
+import { payloadPreset } from './presets.ts';
+
+type Props<TContext = unknown> = PayloadRichTextProps<TContext>;
+
+const { config, converters = { ...corePreset, ...payloadPreset }, data } = Astro.props;
+---
+
+<RichText config={config} converters={converters} data={data} />

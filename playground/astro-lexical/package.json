@@ -1,0 +1,26 @@
+{
+	"name": "@playground/astro-lexical",
+	"version": "0.0.0",
+	"private": true,
+	"type": "module",
+	"imports": {
+		"#*": "./src/*"
+	},
+	"scripts": {
+		"dev": "astro dev",
+		"build": "astro build",
+		"preview": "astro preview",
+		"check-types": "astro check",
+		"test:e2e": "astro build && node scripts/check-build.ts"
+	},
+	"dependencies": {
+		"@xsynaptic/astro-lexical": "workspace:*",
+		"astro": "^7.4.5",
+		"zod": "^4.6.7"
+	},
+	"devDependencies": {
+		"@astrojs/check": "^0.9.12",
+		"@types/node": "^24.19.2",
+		"typescript": "^6.0.3"
+	}
+}

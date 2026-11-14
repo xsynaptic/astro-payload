@@ -1,0 +1,435 @@
+{
+	"root": {
+		"type": "root",
+		"format": "",
+		"indent": 0,
+		"version": 1,
+		"children": [
+			{
+				"type": "paragraph",
+				"format": "",
+				"indent": 0,
+				"version": 1,
+				"children": [
+					{
+						"mode": "normal",
+						"text": "Opening hours",
+						"type": "text",
+						"style": "",
+						"detail": 0,
+						"format": 0,
+						"version": 1
+					}
+				],
+				"direction": null,
+				"textStyle": "",
+				"textFormat": 0
+			},
+			{
+				"type": "table",
+				"format": "",
+				"indent": 0,
+				"version": 1,
+				"children": [
+					{
+						"type": "tablerow",
+						"format": "",
+						"indent": 0,
+						"version": 1,
+						"children": [
+							{
+								"type": "tablecell",
+								"format": "",
+								"indent": 0,
+								"colSpan": 1,
+								"rowSpan": 1,
+								"version": 1,
+								"children": [
+									{
+										"type": "paragraph",
+										"format": "",
+										"indent": 0,
+										"version": 1,
+										"children": [
+											{
+												"mode": "normal",
+												"text": "Day",
+												"type": "text",
+												"style": "",
+												"detail": 0,
+												"format": 0,
+												"version": 1
+											}
+										],
+										"direction": null,
+										"textStyle": "",
+										"textFormat": 0
+									}
+								],
+								"direction": null,
+								"headerState": 3,
+								"backgroundColor": null
+							},
+							{
+								"type": "tablecell",
+								"format": "",
+								"indent": 0,
+								"colSpan": 1,
+								"rowSpan": 1,
+								"version": 1,
+								"children": [
+									{
+										"type": "paragraph",
+										"format": "",
+										"indent": 0,
+										"version": 1,
+										"children": [
+											{
+												"mode": "normal",
+												"text": "Morning",
+												"type": "text",
+												"style": "",
+												"detail": 0,
+												"format": 0,
+												"version": 1
+											}
+										],
+										"direction": null,
+										"textStyle": "",
+										"textFormat": 0
+									}
+								],
+								"direction": null,
+								"headerState": 1,
+								"backgroundColor": null
+							},
+							{
+								"type": "tablecell",
+								"format": "",
+								"indent": 0,
+								"colSpan": 1,
+								"rowSpan": 1,
+								"version": 1,
+								"children": [
+									{
+										"type": "paragraph",
+										"format": "",
+										"indent": 0,
+										"version": 1,
+										"children": [
+											{
+												"mode": "normal",
+												"text": "Afternoon",
+												"type": "text",
+												"style": "",
+												"detail": 0,
+												"format": 0,
+												"version": 1
+											}
+										],
+										"direction": null,
+										"textStyle": "",
+										"textFormat": 0
+									}
+								],
+								"direction": null,
+								"headerState": 1,
+								"backgroundColor": null
+							}
+						],
+						"direction": null
+					},
+					{
+						"type": "tablerow",
+						"format": "",
+						"indent": 0,
+						"version": 1,
+						"children": [
+							{
+								"type": "tablecell",
+								"format": "",
+								"indent": 0,
+								"colSpan": 1,
+								"rowSpan": 1,
+								"version": 1,
+								"children": [
+									{
+										"type": "paragraph",
+										"format": "",
+										"indent": 0,
+										"version": 1,
+										"children": [
+											{
+												"mode": "normal",
+												"text": "Monday",
+												"type": "text",
+												"style": "",
+												"detail": 0,
+												"format": 0,
+												"version": 1
+											}
+										],
+										"direction": null,
+										"textStyle": "",
+										"textFormat": 0
+									}
+								],
+								"direction": null,
+								"headerState": 2,
+								"backgroundColor": null
+							},
+							{
+								"type": "tablecell",
+								"format": "",
+								"indent": 0,
+								"colSpan": 1,
+								"rowSpan": 1,
+								"version": 1,
+								"children": [
+									{
+										"type": "paragraph",
+										"format": "",
+										"indent": 0,
+										"version": 1,
+										"children": [
+											{
+												"mode": "normal",
+												"text": "Guided tour, ",
+												"type": "text",
+												"style": "",
+												"detail": 0,
+												"format": 0,
+												"version": 1
+											},
+											{
+												"mode": "normal",
+												"text": "booking required",
+												"type": "text",
+												"style": "",
+												"detail": 0,
+												"format": 1,
+												"version": 1
+											}
+										],
+										"direction": null,
+										"textStyle": "",
+										"textFormat": 0
+									},
+									{
+										"type": "paragraph",
+										"format": "",
+										"indent": 0,
+										"version": 1,
+										"children": [
+											{
+												"mode": "normal",
+												"text": "Meet at the gate",
+												"type": "text",
+												"style": "",
+												"detail": 0,
+												"format": 0,
+												"version": 1
+											}
+										],
+										"direction": null,
+										"textStyle": "",
+										"textFormat": 0
+									}
+								],
+								"direction": null,
+								"headerState": 0,
+								"backgroundColor": null
+							},
+							{
+								"type": "tablecell",
+								"format": "",
+								"indent": 0,
+								"colSpan": 1,
+								"rowSpan": 2,
+								"version": 1,
+								"children": [
+									{
+										"type": "paragraph",
+										"format": "",
+										"indent": 0,
+										"version": 1,
+										"children": [
+											{
+												"mode": "normal",
+												"text": "Closed",
+												"type": "text",
+												"style": "",
+												"detail": 0,
+												"format": 0,
+												"version": 1
+											}
+										],
+										"direction": null,
+										"textStyle": "",
+										"textFormat": 0
+									}
+								],
+								"direction": null,
+								"headerState": 0,
+								"backgroundColor": null
+							}
+						],
+						"direction": null
+					},
+					{
+						"type": "tablerow",
+						"format": "",
+						"indent": 0,
+						"version": 1,
+						"children": [
+							{
+								"type": "tablecell",
+								"format": "",
+								"indent": 0,
+								"colSpan": 1,
+								"rowSpan": 1,
+								"version": 1,
+								"children": [
+									{
+										"type": "paragraph",
+										"format": "",
+										"indent": 0,
+										"version": 1,
+										"children": [
+											{
+												"mode": "normal",
+												"text": "Tuesday",
+												"type": "text",
+												"style": "",
+												"detail": 0,
+												"format": 0,
+												"version": 1
+											}
+										],
+										"direction": null,
+										"textStyle": "",
+										"textFormat": 0
+									}
+								],
+								"direction": null,
+								"headerState": 2,
+								"backgroundColor": null
+							},
+							{
+								"type": "tablecell",
+								"format": "",
+								"indent": 0,
+								"colSpan": 1,
+								"rowSpan": 1,
+								"version": 1,
+								"children": [
+									{
+										"type": "paragraph",
+										"format": "",
+										"indent": 0,
+										"version": 1,
+										"children": [
+											{
+												"mode": "normal",
+												"text": "Open",
+												"type": "text",
+												"style": "",
+												"detail": 0,
+												"format": 0,
+												"version": 1
+											}
+										],
+										"direction": null,
+										"textStyle": "",
+										"textFormat": 0
+									}
+								],
+								"direction": null,
+								"headerState": 0,
+								"backgroundColor": null
+							}
+						],
+						"direction": null
+					},
+					{
+						"type": "tablerow",
+						"format": "",
+						"indent": 0,
+						"version": 1,
+						"children": [
+							{
+								"type": "tablecell",
+								"format": "",
+								"indent": 0,
+								"colSpan": 1,
+								"rowSpan": 1,
+								"version": 1,
+								"children": [
+									{
+										"type": "paragraph",
+										"format": "",
+										"indent": 0,
+										"version": 1,
+										"children": [
+											{
+												"mode": "normal",
+												"text": "Wednesday",
+												"type": "text",
+												"style": "",
+												"detail": 0,
+												"format": 0,
+												"version": 1
+											}
+										],
+										"direction": null,
+										"textStyle": "",
+										"textFormat": 0
+									}
+								],
+								"direction": null,
+								"headerState": 2,
+								"backgroundColor": null
+							},
+							{
+								"type": "tablecell",
+								"format": "",
+								"indent": 0,
+								"colSpan": 2,
+								"rowSpan": 1,
+								"version": 1,
+								"children": [
+									{
+										"type": "paragraph",
+										"format": "",
+										"indent": 0,
+										"version": 1,
+										"children": [
+											{
+												"mode": "normal",
+												"text": "Open all day",
+												"type": "text",
+												"style": "",
+												"detail": 0,
+												"format": 0,
+												"version": 1
+											}
+										],
+										"direction": null,
+										"textStyle": "",
+										"textFormat": 0
+									}
+								],
+								"direction": null,
+								"headerState": 0,
+								"backgroundColor": null
+							}
+						],
+						"direction": null
+					}
+				],
+				"direction": null
+			}
+		],
+		"direction": null
+	}
+}

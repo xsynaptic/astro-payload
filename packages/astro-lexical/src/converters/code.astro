@@ -1,0 +1,18 @@
+---
+import type { LexicalCodeNode } from '#schemas/lexical.ts';
+import type { ConverterProps } from '#types.ts';
+
+import { getCodeWhitespace, getLanguageClass } from './code.ts';
+
+type Props = ConverterProps<LexicalCodeNode>;
+
+const { config, converters, dir, node, RenderNode, style } = Astro.props;
+
+const language = node.language || undefined;
+---
+
+<pre
+	data-language={language}
+	dir={dir}
+	style={style}
+><code class={getLanguageClass(language)}>{node.children.map((child) => getCodeWhitespace(child) ?? <RenderNode config={config} converters={converters} node={child} />)}</code></pre>

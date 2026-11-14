@@ -1,0 +1,21 @@
+---
+import { createIssueReporter, LexicalEditorStateSchema } from '@xsynaptic/astro-lexical';
+import { corePreset } from '@xsynaptic/astro-lexical/presets';
+import RichText from '@xsynaptic/astro-lexical/rich-text.astro';
+import { toSafeHref } from '@xsynaptic/astro-lexical/safe-href';
+
+import document from '#documents/core.json' with { type: 'json' };
+import Layout from '#layouts/layout.astro';
+
+// The smoke build must render the document cleanly, so any issue fails it
+const config = { onIssue: createIssueReporter({ strict: true }) };
+---
+
+<Layout title="Core">
+	<RichText
+		config={config}
+		converters={corePreset}
+		data={LexicalEditorStateSchema.parse(document)}
+	/>
+	<a href={toSafeHref('javascript:alert(1)')}>Unsafe literal</a>
+</Layout>

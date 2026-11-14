@@ -1,0 +1,20 @@
+---
+import type { RichTextConfig, RichTextProps } from './types.ts';
+
+import { corePreset } from './presets.ts';
+import RenderNode from './render-node.astro';
+
+type Props = RichTextProps;
+
+const { config: options, converters = corePreset, data } = Astro.props;
+
+const config: RichTextConfig = {
+	...options,
+	context: options?.context,
+	siteHref: options?.siteHref ?? ((href) => href),
+};
+---
+
+{data.root.children.map((node) => (
+	<RenderNode config={config} converters={converters} node={node} />
+))}

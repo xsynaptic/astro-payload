@@ -1,0 +1,211 @@
+{
+	"root": {
+		"children": [
+			{
+				"children": [
+					{
+						"children": [
+							{
+								"detail": 0,
+								"format": 0,
+								"mode": "normal",
+								"style": "",
+								"text": "Url only",
+								"type": "text",
+								"version": 1
+							}
+						],
+						"direction": null,
+						"format": "",
+						"indent": 0,
+						"type": "link",
+						"version": 1,
+						"rel": null,
+						"target": null,
+						"title": null,
+						"url": "https://example.com/url-only"
+					}
+				],
+				"direction": null,
+				"format": "",
+				"indent": 0,
+				"type": "paragraph",
+				"version": 1,
+				"textFormat": 0,
+				"textStyle": ""
+			},
+			{
+				"children": [
+					{
+						"children": [
+							{
+								"detail": 0,
+								"format": 0,
+								"mode": "normal",
+								"style": "",
+								"text": "All attributes",
+								"type": "text",
+								"version": 1
+							}
+						],
+						"direction": null,
+						"format": "",
+						"indent": 0,
+						"type": "link",
+						"version": 1,
+						"rel": "noopener noreferrer",
+						"target": "_blank",
+						"title": "Example title",
+						"url": "https://example.com/attributes"
+					}
+				],
+				"direction": null,
+				"format": "",
+				"indent": 0,
+				"type": "paragraph",
+				"version": 1,
+				"textFormat": 0,
+				"textStyle": ""
+			},
+			{
+				"children": [
+					{
+						"children": [
+							{
+								"detail": 0,
+								"format": 0,
+								"mode": "normal",
+								"style": "",
+								"text": "Null attributes",
+								"type": "text",
+								"version": 1
+							}
+						],
+						"direction": null,
+						"format": "",
+						"indent": 0,
+						"type": "link",
+						"version": 1,
+						"rel": null,
+						"target": null,
+						"title": null,
+						"url": "/about"
+					}
+				],
+				"direction": null,
+				"format": "",
+				"indent": 0,
+				"type": "paragraph",
+				"version": 1,
+				"textFormat": 0,
+				"textStyle": ""
+			},
+			{
+				"children": [
+					{
+						"children": [
+							{
+								"detail": 0,
+								"format": 0,
+								"mode": "normal",
+								"style": "",
+								"text": "https://example.com/autolink",
+								"type": "text",
+								"version": 1
+							}
+						],
+						"direction": null,
+						"format": "",
+						"indent": 0,
+						"type": "autolink",
+						"version": 1,
+						"rel": null,
+						"target": null,
+						"title": null,
+						"url": "https://example.com/autolink",
+						"isUnlinked": false
+					}
+				],
+				"direction": null,
+				"format": "",
+				"indent": 0,
+				"type": "paragraph",
+				"version": 1,
+				"textFormat": 0,
+				"textStyle": ""
+			},
+			{
+				"children": [
+					{
+						"children": [
+							{
+								"detail": 0,
+								"format": 0,
+								"mode": "normal",
+								"style": "",
+								"text": "https://example.com/unlinked",
+								"type": "text",
+								"version": 1
+							}
+						],
+						"direction": null,
+						"format": "",
+						"indent": 0,
+						"type": "autolink",
+						"version": 1,
+						"rel": null,
+						"target": null,
+						"title": null,
+						"url": "https://example.com/unlinked",
+						"isUnlinked": true
+					}
+				],
+				"direction": null,
+				"format": "",
+				"indent": 0,
+				"type": "paragraph",
+				"version": 1,
+				"textFormat": 0,
+				"textStyle": ""
+			},
+			{
+				"children": [
+					{
+						"children": [
+							{
+								"detail": 0,
+								"format": 0,
+								"mode": "normal",
+								"style": "",
+								"text": "Unsafe",
+								"type": "text",
+								"version": 1
+							}
+						],
+						"direction": null,
+						"format": "",
+						"indent": 0,
+						"type": "link",
+						"version": 1,
+						"rel": null,
+						"target": null,
+						"title": null,
+						"url": "javascript:alert(1)"
+					}
+				],
+				"direction": null,
+				"format": "",
+				"indent": 0,
+				"type": "paragraph",
+				"version": 1,
+				"textFormat": 0,
+				"textStyle": ""
+			}
+		],
+		"direction": null,
+		"format": "",
+		"indent": 0,
+		"type": "root",
+		"version": 1
+	}
+}

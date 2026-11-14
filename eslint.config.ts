@@ -11,6 +11,14 @@ export default getConfig([
 		...tseslint.configs.disableTypeChecked,
 	},
 	{
+		rules: {
+			'no-restricted-imports': [
+				'error',
+				{ patterns: [{ group: ['../*'], message: 'Use a `#` subpath import from package.json' }] },
+			],
+		},
+	},
+	{
 		// Code complexity rules promoting higher quality agentic coding output
 		rules: {
 			complexity: ['warn', { max: 16, variant: 'modified' }],

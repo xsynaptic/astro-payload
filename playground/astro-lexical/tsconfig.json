@@ -1,0 +1,7 @@
+{
+	"extends": "astro/tsconfigs/strictest",
+	"compilerOptions": {
+		// TypeScript 6 defaults `types` to none; Node types otherwise arrive only once `astro sync` writes .astro
+		"types": ["node"]
+	}
+}

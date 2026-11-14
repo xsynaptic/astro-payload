@@ -1,0 +1,20 @@
+---
+import type { LexicalHeadingNode } from '#schemas/lexical.ts';
+import type { ConverterProps } from '#types.ts';
+
+type Props = ConverterProps<LexicalHeadingNode>;
+
+const { config, converters, dir, node, RenderNode, style } = Astro.props;
+
+const { children } = node;
+
+// A stored value never names the element, whatever the schema let through
+const headingTags = new Set<string>(['h1', 'h2', 'h3', 'h4', 'h5', 'h6']);
+const Tag = headingTags.has(node.tag) ? node.tag : 'h2';
+---
+
+<Tag dir={dir} style={style}>
+	{children.map((child) => (
+		<RenderNode config={config} converters={converters} node={child} />
+	))}
+</Tag>

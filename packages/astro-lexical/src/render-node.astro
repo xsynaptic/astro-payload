@@ -1,0 +1,31 @@
+---
+import type { Converters, LexicalBaseNode, RichTextConfig } from './types.ts';
+
+import { computeNodeStyles, getNodeDirection, resolveNode } from './render-node.ts';
+
+interface Props {
+	config: RichTextConfig;
+	converters: Converters;
+	node: LexicalBaseNode;
+}
+
+const { config, converters, node } = Astro.props;
+
+const { converter: Converter, node: resolvedNode } = resolveNode(node, converters, config);
+
+const style = computeNodeStyles(node);
+const dir = getNodeDirection(node);
+
+const BoundRenderNode = Astro.self;
+---
+
+{Converter ? (
+	<Converter
+		config={config}
+		converters={converters}
+		dir={dir}
+		node={resolvedNode}
+		RenderNode={BoundRenderNode}
+		style={style}
+	/>
+) : undefined}

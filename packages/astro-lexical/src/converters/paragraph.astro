@@ -1,0 +1,29 @@
+---
+import type { LexicalParagraphNode } from '#schemas/lexical.ts';
+import type { ConverterProps } from '#types.ts';
+
+type Props = ConverterProps<LexicalParagraphNode>;
+
+const { config, converters, dir, node, RenderNode, style } = Astro.props;
+
+const { children } = node;
+
+// Skip paragraphs that only hold a carriage return so they don't render as dead space
+function isBlankChild(child: { text?: unknown; type: string }): boolean {
+	if (child.type === 'linebreak') return true;
+	if (child.type === 'text') {
+		return typeof child.text === 'string' && child.text.trim() === '';
+	}
+	return false;
+}
+
+const isEmpty = children.every(isBlankChild);
+---
+
+{isEmpty ? undefined : (
+	<p dir={dir} style={style}>
+		{children.map((child) => (
+			<RenderNode config={config} converters={converters} node={child} />
+		))}
+	</p>
+)}

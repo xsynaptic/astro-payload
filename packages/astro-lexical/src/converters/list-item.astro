@@ -1,0 +1,33 @@
+---
+import type { LexicalListItemNode } from '#schemas/lexical.ts';
+import type { ConverterProps } from '#types.ts';
+
+type Props = ConverterProps<LexicalListItemNode>;
+
+const { config, converters, dir, node, RenderNode, style } = Astro.props;
+
+const { children } = node;
+
+// Lexical wraps a nested list in a list item of its own
+// That wrapper must not show a marker or consume an explicit value, or numbering duplicates
+const isNestedListWrapper = children.length === 1 && children[0]?.type === 'list';
+// Lexical writes `checked` on that wrapper too, though it holds no checkbox
+let checkedState: 'false' | 'true' | undefined;
+if (!isNestedListWrapper && typeof node.checked === 'boolean') {
+	checkedState = node.checked ? 'true' : 'false';
+}
+---
+
+<li
+	aria-checked={checkedState}
+	data-checked={checkedState}
+	data-nested-list={isNestedListWrapper ? '' : undefined}
+	dir={dir}
+	role={checkedState === undefined ? undefined : 'checkbox'}
+	style={style}
+	value={isNestedListWrapper ? undefined : node.value}
+>
+	{children.map((child) => (
+		<RenderNode config={config} converters={converters} node={child} />
+	))}
+</li>

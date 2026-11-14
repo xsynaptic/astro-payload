@@ -1,0 +1,12 @@
+---
+import type { LexicalInlineBlockNode } from '#payload/blocks.ts';
+import type { ConverterProps } from '#types.ts';
+
+type Props = ConverterProps<LexicalInlineBlockNode<{ label: string; tone?: string | undefined }>>;
+
+const { node } = Astro.props;
+
+const { label, tone } = node.fields;
+---
+
+<mark data-tone={tone}>{label}</mark>

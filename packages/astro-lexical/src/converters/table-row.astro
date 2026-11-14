@@ -1,0 +1,16 @@
+---
+import type { LexicalTableRowNode } from '#schemas/lexical.ts';
+import type { ConverterProps } from '#types.ts';
+
+type Props = ConverterProps<LexicalTableRowNode>;
+
+const { config, converters, dir, node, RenderNode, style } = Astro.props;
+
+const { children } = node;
+---
+
+<tr dir={dir} style={style}>
+	{children.map((child) => (
+		<RenderNode config={config} converters={converters} node={child} />
+	))}
+</tr>

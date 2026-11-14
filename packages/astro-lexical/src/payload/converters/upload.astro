@@ -1,0 +1,34 @@
+---
+import type { PayloadUploadNode } from '#payload/schemas.ts';
+import type { ConverterProps } from '#types.ts';
+
+import { describeUpload } from '#payload/uploads.ts';
+
+type Props = ConverterProps<PayloadUploadNode>;
+
+// A paragraph carries the editor's alignment, which an img or picture ignores
+const { node, style } = Astro.props;
+
+const upload = node.value ? describeUpload(node.value) : undefined;
+---
+
+{upload?.kind === 'file' ? (
+	<p style={style}>
+		<a href={upload.href}>{upload.label}</a>
+	</p>
+) : undefined}
+{upload?.kind === 'image' && upload.sources.length === 0 ? (
+	<p style={style}>
+		<img {...upload.img} alt={upload.alt} decoding="async" loading="lazy" />
+	</p>
+) : undefined}
+{upload?.kind === 'image' && upload.sources.length > 0 ? (
+	<p style={style}>
+		<picture>
+			{upload.sources.map((source) => (
+				<source sizes={upload.sizes} srcset={source.srcset} type={source.type} />
+			))}
+			<img {...upload.img} alt={upload.alt} decoding="async" loading="lazy" />
+		</picture>
+	</p>
+) : undefined}

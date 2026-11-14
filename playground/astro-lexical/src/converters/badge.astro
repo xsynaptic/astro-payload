@@ -1,0 +1,10 @@
+---
+import type { ConverterProps } from '@xsynaptic/astro-lexical';
+import type { LexicalInlineBlockNode } from '@xsynaptic/astro-lexical/payload';
+
+type Props = ConverterProps<LexicalInlineBlockNode<{ label: string; tone?: string | undefined }>>;
+
+const { node } = Astro.props;
+---
+
+<mark data-tone={node.fields.tone}>{node.fields.label}</mark>

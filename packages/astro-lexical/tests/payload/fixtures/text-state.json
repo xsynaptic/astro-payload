@@ -1,0 +1,74 @@
+{
+	"root": {
+		"type": "root",
+		"format": "",
+		"indent": 0,
+		"version": 1,
+		"children": [
+			{
+				"type": "paragraph",
+				"format": "",
+				"indent": 0,
+				"version": 1,
+				"children": [
+					{
+						"mode": "normal",
+						"text": "Synthetic text with ",
+						"type": "text",
+						"style": "",
+						"detail": 0,
+						"format": 0,
+						"version": 1
+					},
+					{
+						"$": {
+							"color": "text-red"
+						},
+						"mode": "normal",
+						"text": "red text",
+						"type": "text",
+						"style": "",
+						"detail": 0,
+						"format": 0,
+						"version": 1
+					},
+					{
+						"mode": "normal",
+						"text": " and ",
+						"type": "text",
+						"style": "",
+						"detail": 0,
+						"format": 0,
+						"version": 1
+					},
+					{
+						"$": {
+							"color": "bg-blue",
+							"underline": "dashed"
+						},
+						"mode": "normal",
+						"text": "a dashed blue highlight",
+						"type": "text",
+						"style": "",
+						"detail": 0,
+						"format": 1,
+						"version": 1
+					},
+					{
+						"mode": "normal",
+						"text": ".",
+						"type": "text",
+						"style": "",
+						"detail": 0,
+						"format": 0,
+						"version": 1
+					}
+				],
+				"direction": null,
+				"textStyle": "",
+				"textFormat": 0
+			}
+		],
+		"direction": null
+	}
+}

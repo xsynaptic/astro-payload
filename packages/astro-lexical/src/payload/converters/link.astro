@@ -1,0 +1,24 @@
+---
+import type { PayloadLinkNode } from '#payload/schemas.ts';
+import type { PayloadRichTextConfig } from '#payload/types.ts';
+import type { ConverterProps } from '#types.ts';
+
+import { resolvePayloadLinkHref } from '#payload/links.ts';
+
+type Props = ConverterProps<PayloadLinkNode> & { config: PayloadRichTextConfig };
+
+const { config, converters, dir, node, RenderNode } = Astro.props;
+
+const rel = node.fields.newTab ? 'noopener noreferrer' : undefined;
+const target = node.fields.newTab ? '_blank' : undefined;
+
+const href = await resolvePayloadLinkHref(node.fields, config);
+
+const { children } = node;
+---
+
+<a dir={dir} href={href} rel={rel} target={target}>
+	{children.map((child) => (
+		<RenderNode config={config} converters={converters} node={child} />
+	))}
+</a>

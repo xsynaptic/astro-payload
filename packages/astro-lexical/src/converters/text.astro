@@ -1,0 +1,23 @@
+---
+import type { LexicalTextNode } from '#schemas/lexical.ts';
+import type { ConverterProps } from '#types.ts';
+
+import TextFormat from './text-format.astro';
+import { getTextStyle } from './text.ts';
+
+type Props = ConverterProps<LexicalTextNode> & { class?: string | undefined };
+
+const { class: className, config, node } = Astro.props;
+
+const format = node.format ?? 0;
+
+const style = getTextStyle(node, config.textStyleProperties);
+---
+
+{style || className ? (
+	<span class={className} style={style}>
+		<TextFormat format={format} text={node.text} />
+	</span>
+) : (
+	<TextFormat format={format} text={node.text} />
+)}

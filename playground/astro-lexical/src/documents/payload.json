@@ -1,0 +1,66 @@
+{
+	"root": {
+		"children": [
+			{
+				"children": [
+					{
+						"format": 0,
+						"text": "A sentence with a ",
+						"type": "text",
+						"version": 1
+					},
+					{
+						"fields": {
+							"blockType": "badge",
+							"label": "Synthetic badge",
+							"tone": "info"
+						},
+						"type": "inlineBlock",
+						"version": 1
+					}
+				],
+				"direction": null,
+				"format": "",
+				"indent": 0,
+				"type": "paragraph",
+				"version": 1
+			},
+			{
+				"relationTo": "media",
+				"type": "upload",
+				"version": 3,
+				"value": {
+					"alt": "A grey test rectangle",
+					"filename": "fixture-grey-rectangle.png",
+					"height": 600,
+					"id": 1,
+					"mimeType": "image/png",
+					"url": "/api/media/file/fixture-grey-rectangle.png",
+					"width": 800,
+					"sizes": {
+						"thumbnail": {
+							"height": 300,
+							"mimeType": "image/png",
+							"url": "/api/media/file/fixture-grey-rectangle-400x300.png",
+							"width": 400
+						}
+					}
+				}
+			},
+			{
+				"relationTo": "posts",
+				"type": "relationship",
+				"version": 2,
+				"value": {
+					"id": 40,
+					"title": "A related test post"
+				}
+			}
+		],
+		"direction": null,
+		"format": "",
+		"indent": 0,
+		"type": "root",
+		"version": 1
+	}
+}

@@ -1,0 +1,31 @@
+---
+import type { LexicalAutolinkNode, LexicalLinkNode } from '#schemas/lexical.ts';
+import type { ConverterProps } from '#types.ts';
+
+import { toSafeHref } from '#safe-href.ts';
+
+type Props = ConverterProps<LexicalAutolinkNode | LexicalLinkNode>;
+
+const { config, converters, dir, node, RenderNode } = Astro.props;
+
+// Lexical keeps an autolink the author undid as a node, so its text survives without the anchor
+const isUnlinked = 'isUnlinked' in node && node.isUnlinked === true;
+
+const { children } = node;
+---
+
+{isUnlinked ? (
+	children.map((child) => <RenderNode config={config} converters={converters} node={child} />)
+) : (
+	<a
+		dir={dir}
+		href={config.siteHref(toSafeHref(node.url))}
+		rel={node.rel ?? undefined}
+		target={node.target ?? undefined}
+		title={node.title ?? undefined}
+	>
+		{children.map((child) => (
+			<RenderNode config={config} converters={converters} node={child} />
+		))}
+	</a>
+)}

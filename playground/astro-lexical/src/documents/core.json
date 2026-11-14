@@ -1,0 +1,89 @@
+{
+	"root": {
+		"children": [
+			{
+				"children": [
+					{
+						"format": 1,
+						"text": "Synthetic bold",
+						"type": "text",
+						"version": 1
+					},
+					{
+						"children": [
+							{
+								"format": 0,
+								"text": "Attributes",
+								"type": "text",
+								"version": 1
+							}
+						],
+						"direction": null,
+						"format": "",
+						"indent": 0,
+						"type": "link",
+						"version": 1,
+						"rel": "noopener noreferrer",
+						"target": "_blank",
+						"title": null,
+						"url": "https://example.com/attributes"
+					},
+					{
+						"children": [
+							{
+								"format": 0,
+								"text": "Unsafe",
+								"type": "text",
+								"version": 1
+							}
+						],
+						"direction": null,
+						"format": "",
+						"indent": 0,
+						"type": "link",
+						"version": 1,
+						"url": "javascript:alert(1)"
+					}
+				],
+				"direction": null,
+				"format": "",
+				"indent": 0,
+				"type": "paragraph",
+				"version": 1
+			},
+			{
+				"children": [
+					{
+						"text": "const answer = 42;",
+						"type": "code-highlight",
+						"version": 1
+					},
+					{
+						"type": "linebreak",
+						"version": 1
+					},
+					{
+						"type": "tab",
+						"version": 1
+					},
+					{
+						"text": "answer;",
+						"type": "code-highlight",
+						"version": 1
+					}
+				],
+				"direction": null,
+				"format": "",
+				"indent": 0,
+				"type": "code",
+				"version": 1,
+				"language": "javascript"
+			}
+		],
+		"direction": null,
+		"format": "",
+		"indent": 0,
+		"type": "root",
+		"version": 1
+	}
+}

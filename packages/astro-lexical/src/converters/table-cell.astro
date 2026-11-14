@@ -1,0 +1,32 @@
+---
+import type { LexicalTableCellNode } from '#schemas/lexical.ts';
+import type { ConverterProps } from '#types.ts';
+
+import { tableCellHeader } from '#constants.ts';
+
+type Props = ConverterProps<LexicalTableCellNode>;
+
+const { config, converters, dir, node, RenderNode, style } = Astro.props;
+
+const { children, headerState } = node;
+
+// An empty header names nothing
+const isEmpty = children.every(
+	(child) =>
+		child.type === 'paragraph' && Array.isArray(child.children) && child.children.length === 0,
+);
+const Tag = isEmpty || headerState === tableCellHeader.none ? 'td' : 'th';
+
+// A header row cell, corner included, heads its column
+let scope: 'col' | 'row' | undefined;
+if (Tag === 'th') scope = headerState === tableCellHeader.column ? 'row' : 'col';
+
+const colSpan = node.colSpan > 1 ? node.colSpan : undefined;
+const rowSpan = node.rowSpan > 1 ? node.rowSpan : undefined;
+---
+
+<Tag colspan={colSpan} dir={dir} rowspan={rowSpan} scope={scope} style={style}>
+	{children.map((child) => (
+		<RenderNode config={config} converters={converters} node={child} />
+	))}
+</Tag>

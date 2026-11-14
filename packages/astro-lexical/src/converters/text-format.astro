@@ -1,0 +1,32 @@
+---
+import { textFormat } from '#constants.ts';
+
+import { formatTags, getActiveFormat } from './text.ts';
+
+interface Props {
+	format: number;
+	text: string;
+}
+
+const { format, text } = Astro.props;
+
+const Self = Astro.self;
+
+const active = getActiveFormat(format);
+
+let Tag: (typeof formatTags)[keyof typeof formatTags] | undefined;
+let remaining = format;
+
+if (active !== 'none') {
+	Tag = formatTags[active];
+	remaining = format ^ textFormat[active];
+}
+---
+
+{Tag ? (
+	<Tag>
+		<Self format={remaining} text={text} />
+	</Tag>
+) : (
+	text
+)}

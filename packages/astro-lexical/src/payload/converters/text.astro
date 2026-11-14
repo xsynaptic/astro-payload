@@ -1,0 +1,16 @@
+---
+import type { PayloadTextNode } from '#payload/schemas.ts';
+import type { PayloadRichTextConfig } from '#payload/types.ts';
+import type { ConverterProps } from '#types.ts';
+
+import CoreTextConverter from '#converters/text.astro';
+import { getTextStateClass } from '#payload/text-state.ts';
+
+type Props = ConverterProps<PayloadTextNode> & { config: PayloadRichTextConfig };
+
+const { config, node } = Astro.props;
+
+const className = getTextStateClass(node.$, config.textStateClasses);
+---
+
+<CoreTextConverter {...Astro.props} class={className} />
