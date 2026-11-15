@@ -7,12 +7,12 @@ import type { PayloadRichTextDefinitions } from '#payload/definitions.ts';
 import type { PayloadRichTextProps } from '#payload/types.ts';
 import type { RichTextProps } from '#types.ts';
 
+import { defineNode } from '#definitions.ts';
 import { parseRichText } from '#parse.ts';
 import { defineBlock } from '#payload/blocks.ts';
 import { definePayloadRichText } from '#payload/definitions.ts';
 import PayloadRichText from '#payload/rich-text.astro';
 import { PayloadUploadNodeSchema } from '#payload/schemas.ts';
-import { defineNode } from '#registry.ts';
 import { coreRichText, editorState, element, stubConverter } from '#tests/render-test-utils.ts';
 
 import inlineBlock from './fixtures/inline-block.json' with { type: 'json' };

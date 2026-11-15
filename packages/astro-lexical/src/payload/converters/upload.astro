@@ -1,15 +1,16 @@
 ---
 import type { PayloadUploadNode } from '#payload/schemas.ts';
+import type { PayloadRichTextConfig } from '#payload/types.ts';
 import type { ConverterProps } from '#types.ts';
 
 import { describeUpload } from '#payload/uploads.ts';
 
-type Props = ConverterProps<PayloadUploadNode>;
+type Props = ConverterProps<PayloadUploadNode> & { config: PayloadRichTextConfig };
 
 // A paragraph carries the editor's alignment, which an img or picture ignores
-const { node, style } = Astro.props;
+const { config, node, style } = Astro.props;
 
-const upload = node.value ? describeUpload(node.value) : undefined;
+const upload = node.value ? describeUpload(node.value, node.fields, config.uploadSizes) : undefined;
 ---
 
 {upload?.kind === 'file' ? (

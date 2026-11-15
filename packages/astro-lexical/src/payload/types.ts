@@ -7,6 +7,7 @@ import type { InternalLinkTarget } from './links.ts';
 export interface PayloadRichTextConfig<TContext = unknown> extends RichTextConfig<TContext> {
 	internalDocToHref: (target: InternalLinkTarget, context: TContext) => Promise<string> | string;
 	textStateClasses?: Readonly<Record<string, Readonly<Record<string, string>>>>;
+	uploadSizes?: (image: { height: number; width: number }) => string;
 }
 
 // The core RichText accepts any config, so only the Payload RichText makes a missing resolver a type error

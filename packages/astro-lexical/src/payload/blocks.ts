@@ -1,7 +1,10 @@
 import type { z } from 'zod';
 
-import type { LiteralOf } from '#registry.ts';
+import type { LiteralOf } from '#definitions.ts';
+import type { DispatchEntry } from '#dispatch.ts';
 import type { LexicalBaseNode } from '#types.ts';
+
+import type { BlockNodeType } from './schemas.ts';
 
 export interface LexicalBlockDefinition<TBlockType extends string = string> {
 	blockType: TBlockType;
@@ -34,7 +37,19 @@ export function defineBlock<TSchema extends BlockFieldsSchema>(
 	return { blockType, schema };
 }
 
-export function readBlockType({ fields }: LexicalBaseNode): string | undefined {
+export function toBlockDispatch<TEntry>(
+	variantsFor: (
+		section: 'blocks' | 'inlineBlocks',
+		type: BlockNodeType,
+	) => Readonly<Record<string, TEntry>>,
+): Record<BlockNodeType, DispatchEntry<TEntry>> {
+	return {
+		block: { key: readBlockType, variants: variantsFor('blocks', 'block') },
+		inlineBlock: { key: readBlockType, variants: variantsFor('inlineBlocks', 'inlineBlock') },
+	};
+}
+
+function readBlockType({ fields }: LexicalBaseNode): string | undefined {
 	if (typeof fields !== 'object' || fields === null || !('blockType' in fields)) return undefined;
 
 	return typeof fields.blockType === 'string' ? fields.blockType : undefined;

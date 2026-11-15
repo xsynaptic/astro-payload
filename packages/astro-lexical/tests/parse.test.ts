@@ -6,13 +6,12 @@ import type { ParsedEditorState } from '#definitions.ts';
 import type { RichTextIssue } from '#issues.ts';
 import type { LexicalBaseNode } from '#types.ts';
 
-import { defineRichText } from '#definitions.ts';
+import { coreNodes, defineNode, defineRichText } from '#definitions.ts';
 import { addRichTextIssues } from '#issues.ts';
 import { parseRichText } from '#parse.ts';
 import { definePayloadRichText } from '#payload/definitions.ts';
 import { payloadDocumentSchema, PayloadRelationshipNodeSchema } from '#payload/schemas.ts';
-import { defineNode } from '#registry.ts';
-import { coreNodes, elementFields } from '#schemas/lexical.ts';
+import { elementFields } from '#schemas/lexical.ts';
 import checkList from '#tests/fixtures/check-list.json' with { type: 'json' };
 import code from '#tests/fixtures/code.json' with { type: 'json' };
 import direction from '#tests/fixtures/direction.json' with { type: 'json' };

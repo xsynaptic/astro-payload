@@ -12,7 +12,7 @@ export { defineBlock } from './blocks.ts';
 
 export type { LexicalBlockDefinition, LexicalBlockNode, LexicalInlineBlockNode } from './blocks.ts';
 
-export { definePayloadRichText } from './definitions.ts';
+export { definePayloadRichText, payloadNodes } from './definitions.ts';
 
 export type { PayloadRichTextDefinitions } from './definitions.ts';
 
@@ -22,7 +22,6 @@ export {
 	PayloadAutolinkNodeSchema,
 	payloadDocumentSchema,
 	PayloadLinkNodeSchema,
-	payloadNodes,
 	PayloadRelationshipNodeSchema,
 	PayloadTextNodeSchema,
 	PayloadUploadNodeSchema,

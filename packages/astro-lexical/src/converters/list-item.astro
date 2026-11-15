@@ -4,7 +4,7 @@ import type { ConverterProps } from '#types.ts';
 
 type Props = ConverterProps<LexicalListItemNode>;
 
-const { config, converters, dir, node, RenderNode, style } = Astro.props;
+const { dir, node, style } = Astro.props;
 
 const { children } = node;
 
@@ -27,7 +27,5 @@ if (!isNestedListWrapper && typeof node.checked === 'boolean') {
 	style={style}
 	value={isNestedListWrapper ? undefined : node.value}
 >
-	{children.map((child) => (
-		<RenderNode config={config} converters={converters} node={child} />
-	))}
+	<slot />
 </li>

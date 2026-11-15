@@ -6,16 +6,14 @@ import { toSafeHref } from '#safe-href.ts';
 
 type Props = ConverterProps<LexicalAutolinkNode | LexicalLinkNode>;
 
-const { config, converters, dir, node, RenderNode } = Astro.props;
+const { config, dir, node } = Astro.props;
 
 // Lexical keeps an autolink the author undid as a node, so its text survives without the anchor
 const isUnlinked = 'isUnlinked' in node && node.isUnlinked === true;
-
-const { children } = node;
 ---
 
 {isUnlinked ? (
-	children.map((child) => <RenderNode config={config} converters={converters} node={child} />)
+	<slot />
 ) : (
 	<a
 		dir={dir}
@@ -24,8 +22,6 @@ const { children } = node;
 		target={node.target ?? undefined}
 		title={node.title ?? undefined}
 	>
-		{children.map((child) => (
-			<RenderNode config={config} converters={converters} node={child} />
-		))}
+		<slot />
 	</a>
 )}

@@ -1,6 +1,5 @@
 import { z } from 'zod';
 
-import { defineNode } from '#registry.ts';
 import { elementFields, LexicalTextNodeSchema } from '#schemas/lexical.ts';
 
 const documentIdSchema = z.union([z.number(), z.string()]);
@@ -69,7 +68,7 @@ const uploadDocSchema = payloadDocumentSchema({
 const decoratorFormat = elementFields.format.optional();
 
 export const PayloadUploadNodeSchema = z.object({
-	// Unread by the preset converter; a site's own reads its caption from here
+	// The preset converter reads only `alt`; a site's own reads its caption from here
 	fields: z.record(z.string(), z.unknown()).optional(),
 	format: decoratorFormat,
 	id: z.string().optional(),
@@ -103,16 +102,6 @@ export function toBlockNodeSchema<TType extends BlockNodeType, TFields extends z
 		version: z.number().optional(),
 	});
 }
-
-export const payloadNodes = [
-	defineNode(PayloadTextNodeSchema),
-	defineNode(PayloadLinkNodeSchema),
-	defineNode(PayloadAutolinkNodeSchema),
-	defineNode(PayloadUploadNodeSchema),
-	defineNode(PayloadRelationshipNodeSchema),
-] as const;
-
-export type PayloadNodeType = (typeof payloadNodes)[number]['type'];
 
 export type PayloadAutolinkNode = z.infer<typeof PayloadAutolinkNodeSchema>;
 export type PayloadLinkNode = z.infer<typeof PayloadLinkNodeSchema>;

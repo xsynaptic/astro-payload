@@ -4,17 +4,13 @@ import type { ConverterProps } from '#types.ts';
 
 type Props = ConverterProps<LexicalTableNode>;
 
-const { config, converters, dir, node, RenderNode, style } = Astro.props;
-
-const { children } = node;
+const { dir, style } = Astro.props;
 ---
 
 <div data-table-wrapper="">
 	<table dir={dir} style={style}>
 		<tbody>
-			{children.map((child) => (
-				<RenderNode config={config} converters={converters} node={child} />
-			))}
+			<slot />
 		</tbody>
 	</table>
 </div>

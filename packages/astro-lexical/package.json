@@ -1,6 +1,6 @@
 {
 	"name": "@xsynaptic/astro-lexical",
-	"version": "0.2.0",
+	"version": "0.3.0",
 	"description": "Render Lexical rich text in Astro, with a Payload preset",
 	"type": "module",
 	"license": "MIT",

@@ -12,18 +12,29 @@ interface Props {
 const { config, converters, node } = Astro.props;
 
 const Converter = getConverter(node, converters);
+const RenderNode = Astro.self;
 
-const style = computeNodeStyles(node);
-const dir = getNodeDirection(node);
+const props = {
+	config,
+	converters,
+	dir: getNodeDirection(node),
+	node,
+	RenderNode,
+	style: computeNodeStyles(node),
+};
 
-const BoundRenderNode = Astro.self;
+// The parse has checked every child
+const children = Array.isArray(node.children)
+	? (node.children as ReadonlyArray<LexicalBaseNode>)
+	: undefined;
 ---
 
-<Converter
-	config={config}
-	converters={converters}
-	dir={dir}
-	node={node}
-	RenderNode={BoundRenderNode}
-	style={style}
-/>
+{children ? (
+	<Converter {...props}>
+		{children.map((child) => (
+			<RenderNode config={config} converters={converters} node={child} />
+		))}
+	</Converter>
+) : (
+	<Converter {...props} />
+)}

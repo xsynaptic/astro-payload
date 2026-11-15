@@ -6,15 +6,13 @@ import { isBlankInline } from '#blank.ts';
 
 type Props = ConverterProps<LexicalParagraphNode>;
 
-const { config, converters, dir, node, RenderNode, style } = Astro.props;
+const { dir, node, style } = Astro.props;
 
 const { children } = node;
 ---
 
 {isBlankInline(children) ? undefined : (
 	<p dir={dir} style={style}>
-		{children.map((child) => (
-			<RenderNode config={config} converters={converters} node={child} />
-		))}
+		<slot />
 	</p>
 )}

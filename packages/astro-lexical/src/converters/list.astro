@@ -4,14 +4,11 @@ import type { ConverterProps } from '#types.ts';
 
 type Props = ConverterProps<LexicalListNode>;
 
-const { config, converters, dir, node, RenderNode, style } = Astro.props;
+const { dir, node, style } = Astro.props;
 
-const { children } = node;
 const Tag = node.listType === 'number' ? 'ol' : 'ul';
 ---
 
 <Tag data-list-type={node.listType} dir={dir} style={style}>
-	{children.map((child) => (
-		<RenderNode config={config} converters={converters} node={child} />
-	))}
+	<slot />
 </Tag>

@@ -8,7 +8,7 @@ import RenderNode from '#render-node.astro';
 import type { PayloadRichTextDefinitions } from './definitions.ts';
 import type { PayloadRichTextProps } from './types.ts';
 
-import { readBlockType } from './blocks.ts';
+import { toBlockDispatch } from './blocks.ts';
 import { payloadConverters } from './presets.ts';
 
 type Props<
@@ -20,10 +20,7 @@ const { config, data } = Astro.props;
 const map: ConverterMapShape | undefined = Astro.props.converters;
 
 const converters: Converters = {
-	dispatch: {
-		block: { key: readBlockType, variants: map?.blocks ?? {} },
-		inlineBlock: { key: readBlockType, variants: map?.inlineBlocks ?? {} },
-	},
+	dispatch: toBlockDispatch((section) => map?.[section] ?? {}),
 	nodes: { ...coreConverters, ...payloadConverters, ...map?.nodes },
 };
 ---

@@ -4,9 +4,8 @@ import { z } from 'zod';
 import type { ConverterMap, CoreRichTextDefinitions } from '#definitions.ts';
 import type { RichTextProps } from '#types.ts';
 
-import { defineRichText } from '#definitions.ts';
+import { defineNode, defineRichText } from '#definitions.ts';
 import { parseRichText } from '#parse.ts';
-import { defineNode } from '#registry.ts';
 import { LexicalHeadingNodeSchema } from '#schemas/lexical.ts';
 import { editorState, element, stubConverter } from '#tests/render-test-utils.ts';
 

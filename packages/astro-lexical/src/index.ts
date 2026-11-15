@@ -2,11 +2,13 @@ export { tableCellHeader, textFormat } from './constants.ts';
 
 export { getCodeText } from './converters/code.ts';
 
-export { defineRichText } from './definitions.ts';
+export { coreNodes, defineNode, defineRichText } from './definitions.ts';
 
 export type {
 	ConverterMap,
 	CoreRichTextDefinitions,
+	LexicalNode,
+	LexicalNodeDefinition,
 	ParsedEditorState,
 	RichTextDefinitions,
 } from './definitions.ts';
@@ -23,12 +25,7 @@ export { parseRichText } from './parse.ts';
 
 export type { RichTextParseResult } from './parse.ts';
 
-export { defineNode } from './registry.ts';
-
-export type { LexicalNodeDefinition } from './registry.ts';
-
 export {
-	coreNodes,
 	LexicalAutolinkNodeSchema,
 	LexicalCodeHighlightNodeSchema,
 	LexicalCodeNodeSchema,
@@ -58,7 +55,6 @@ export type {
 	LexicalLinkNode,
 	LexicalListItemNode,
 	LexicalListNode,
-	LexicalNode,
 	LexicalParagraphNode,
 	LexicalQuoteNode,
 	LexicalRootNode,

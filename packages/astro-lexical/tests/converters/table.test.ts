@@ -75,6 +75,31 @@ describe('table', () => {
 		expect(cell).toMatchObject({ attributes: '', tag: 'td' });
 	});
 
+	it('renders a header holding only whitespace as a data cell', async () => {
+		const whitespace = {
+			children: [
+				{ ...element, children: [{ text: '  ', type: 'text', version: 1 }], type: 'paragraph' },
+			],
+			headerState: 1,
+		};
+		const [cell] = await renderCells([singleCellTable(whitespace)]);
+
+		expect(cell).toEqual({ attributes: '', body: '', tag: 'td' });
+	});
+
+	it('keeps a header holding a blank paragraph beside text as a header', async () => {
+		const mixed = {
+			children: [
+				{ ...element, children: [{ type: 'linebreak', version: 1 }], type: 'paragraph' },
+				{ ...element, children: [{ text: 'Day', type: 'text', version: 1 }], type: 'paragraph' },
+			],
+			headerState: 1,
+		};
+		const [cell] = await renderCells([singleCellTable(mixed)]);
+
+		expect(cell).toMatchObject({ attributes: 'scope="col"', body: '<p>Day</p>', tag: 'th' });
+	});
+
 	it('masks a stray header bit the way upstream does on load', async () => {
 		const [stray] = await renderCells([singleCellTable({ headerState: 4 })]);
 		const [corner] = await renderCells([singleCellTable({ headerState: -1 })]);

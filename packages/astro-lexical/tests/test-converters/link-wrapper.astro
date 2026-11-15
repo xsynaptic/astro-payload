@@ -1,0 +1,10 @@
+---
+import type { LexicalLinkNode } from '#schemas/lexical.ts';
+import type { ConverterProps } from '#types.ts';
+
+import LinkConverter from '#converters/link.astro';
+
+type Props = ConverterProps<LexicalLinkNode>;
+---
+
+<LinkConverter {...Astro.props} />

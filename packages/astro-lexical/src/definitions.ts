@@ -3,11 +3,72 @@ import type { AstroComponentFactory } from 'astro/runtime/server/index.js';
 import { z } from 'zod';
 
 import type { DispatchEntry, NodeTable } from './dispatch.ts';
-import type { LexicalNodeDefinition } from './registry.ts';
-import type { LexicalNode, LexicalRootNode } from './schemas/lexical.ts';
+import type { LexicalRootNode } from './schemas/lexical.ts';
 import type { LexicalBaseNode } from './types.ts';
 
-import { coreNodes } from './schemas/lexical.ts';
+import {
+	LexicalAutolinkNodeSchema,
+	LexicalCodeHighlightNodeSchema,
+	LexicalCodeNodeSchema,
+	LexicalHeadingNodeSchema,
+	LexicalHorizontalRuleNodeSchema,
+	LexicalLinebreakNodeSchema,
+	LexicalLinkNodeSchema,
+	LexicalListItemNodeSchema,
+	LexicalListNodeSchema,
+	LexicalParagraphNodeSchema,
+	LexicalQuoteNodeSchema,
+	LexicalTableCellNodeSchema,
+	LexicalTableNodeSchema,
+	LexicalTableRowNodeSchema,
+	LexicalTabNodeSchema,
+	LexicalTextNodeSchema,
+} from './schemas/lexical.ts';
+
+export interface LexicalNodeDefinition<
+	TType extends string = string,
+	TSchema extends NodeSchema = NodeSchema,
+> {
+	schema: TSchema;
+	type: TType;
+}
+
+export type LiteralOf<TSchema> =
+	TSchema extends z.ZodLiteral<infer TValue extends string> ? TValue : never;
+
+type NodeSchema = z.ZodObject<Record<string, z.ZodType> & { type: z.ZodLiteral<string> }>;
+
+// A tag declared beside the schema compiles even when the two disagree
+export function defineNode<TSchema extends NodeSchema>(
+	schema: TSchema,
+): LexicalNodeDefinition<LiteralOf<TSchema['shape']['type']>, TSchema> {
+	// The shape is intersected with an index signature, which widens the lookup back to `string`
+	const type = schema.shape.type.value as LiteralOf<TSchema['shape']['type']>;
+
+	return { schema, type };
+}
+
+export const coreNodes = [
+	defineNode(LexicalTextNodeSchema),
+	defineNode(LexicalLinebreakNodeSchema),
+	defineNode(LexicalTabNodeSchema),
+	defineNode(LexicalHorizontalRuleNodeSchema),
+	defineNode(LexicalParagraphNodeSchema),
+	defineNode(LexicalHeadingNodeSchema),
+	defineNode(LexicalListNodeSchema),
+	defineNode(LexicalListItemNodeSchema),
+	defineNode(LexicalLinkNodeSchema),
+	defineNode(LexicalAutolinkNodeSchema),
+	defineNode(LexicalQuoteNodeSchema),
+	defineNode(LexicalCodeNodeSchema),
+	defineNode(LexicalCodeHighlightNodeSchema),
+	defineNode(LexicalTableNodeSchema),
+	defineNode(LexicalTableRowNodeSchema),
+	defineNode(LexicalTableCellNodeSchema),
+] as const;
+
+// No upload, relationship or block nodes; those belong to the Payload preset and the app
+export type LexicalNode = z.infer<(typeof coreNodes)[number]['schema']>;
 
 // Type only, and unexported, so only a parse (or a deliberate cast) produces branded data
 declare const richTextBrand: unique symbol;

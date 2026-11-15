@@ -1,6 +1,7 @@
 import { toSafeHref } from '#safe-href.ts';
 
 import type { PayloadUploadNode } from './schemas.ts';
+import type { PayloadRichTextConfig } from './types.ts';
 
 interface ImageCandidate {
 	mimeType: string;
@@ -10,17 +11,40 @@ interface ImageCandidate {
 
 type UploadDoc = NonNullable<PayloadUploadNode['value']>;
 
-export function describeUpload(doc: UploadDoc) {
+type UploadSizes = PayloadRichTextConfig['uploadSizes'];
+
+export function describeUpload(
+	doc: UploadDoc,
+	fields?: PayloadUploadNode['fields'],
+	uploadSizes?: UploadSizes,
+) {
 	const src = toSafeHref(doc.url);
 
 	if (!doc.mimeType.startsWith('image/')) {
 		return { href: src, kind: 'file' as const, label: doc.filename || doc.url };
 	}
 
-	return { alt: doc.alt ?? '', kind: 'image' as const, ...describeImage(doc, src) };
+	return {
+		alt: toAlt(doc, fields),
+		kind: 'image' as const,
+		...describeImage(doc, src, uploadSizes),
+	};
 }
 
-function describeImage({ height, mimeType, sizes, url, width }: UploadDoc, src: string) {
+// Payload's converters prefer the node's alt and skip an empty one
+function toAlt(doc: UploadDoc, fields: PayloadUploadNode['fields']) {
+	const fieldAlt = fields?.alt;
+
+	if (typeof fieldAlt === 'string' && fieldAlt !== '') return fieldAlt;
+
+	return doc.alt ?? '';
+}
+
+function describeImage(
+	{ height, mimeType, sizes, url, width }: UploadDoc,
+	src: string,
+	uploadSizes: UploadSizes,
+) {
 	const img = {
 		height: height ?? undefined,
 		sizes: undefined,
@@ -39,7 +63,9 @@ function describeImage({ height, mimeType, sizes, url, width }: UploadDoc, src: 
 	if (!srcset && sources.length === 0) return { img, sizes: undefined, sources };
 
 	// Capped at the intrinsic width, which the content column may well be wider than
-	const sizesAttribute = `(max-width: ${String(width)}px) 100vw, ${String(width)}px`;
+	const fallbackSizes = `(max-width: ${String(width)}px) 100vw, ${String(width)}px`;
+	// `auto` only applies to lazy images, which the converter always renders
+	const sizesAttribute = `auto, ${uploadSizes?.({ height, width }) ?? fallbackSizes}`;
 
 	return {
 		img: { ...img, sizes: srcset ? sizesAttribute : undefined, srcset },

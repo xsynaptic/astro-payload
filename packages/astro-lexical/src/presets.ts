@@ -1,6 +1,6 @@
 import type { AstroComponentFactory } from 'astro/runtime/server/index.js';
 
-import type { LexicalNode } from './schemas/lexical.ts';
+import type { LexicalNode } from './definitions.ts';
 
 import BlockquoteConverter from './converters/blockquote.astro';
 import CodeHighlightConverter from './converters/code-highlight.astro';

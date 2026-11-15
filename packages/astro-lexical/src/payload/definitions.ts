@@ -1,18 +1,28 @@
-import type { z } from 'zod';
+import type { LexicalNode, LexicalNodeDefinition, RichTextDefinitions } from '#definitions.ts';
 
-import type { RichTextDefinitions } from '#definitions.ts';
-import type { DispatchEntry } from '#dispatch.ts';
-import type { LexicalNodeDefinition } from '#registry.ts';
-import type { LexicalNode } from '#schemas/lexical.ts';
-
-import { toSchemaTable } from '#definitions.ts';
-import { coreNodes } from '#schemas/lexical.ts';
+import { coreNodes, defineNode, toSchemaTable } from '#definitions.ts';
 
 import type { LexicalBlockDefinition } from './blocks.ts';
-import type { BlockNodeType, PayloadNodeType } from './schemas.ts';
 
-import { readBlockType } from './blocks.ts';
-import { payloadNodes, toBlockNodeSchema } from './schemas.ts';
+import { toBlockDispatch } from './blocks.ts';
+import {
+	PayloadAutolinkNodeSchema,
+	PayloadLinkNodeSchema,
+	PayloadRelationshipNodeSchema,
+	PayloadTextNodeSchema,
+	PayloadUploadNodeSchema,
+	toBlockNodeSchema,
+} from './schemas.ts';
+
+export const payloadNodes = [
+	defineNode(PayloadTextNodeSchema),
+	defineNode(PayloadLinkNodeSchema),
+	defineNode(PayloadAutolinkNodeSchema),
+	defineNode(PayloadUploadNodeSchema),
+	defineNode(PayloadRelationshipNodeSchema),
+] as const;
+
+export type PayloadNodeType = (typeof payloadNodes)[number]['type'];
 
 export type PayloadRichTextDefinitions = RichTextDefinitions<'payload'>;
 
@@ -36,20 +46,15 @@ export function definePayloadRichText<
 	const definitions = [...coreNodes, ...payloadNodes, ...(options.nodes ?? [])];
 
 	return {
-		schemas: toSchemaTable(definitions, {
-			block: toBlockDispatch('block', options.blocks ?? []),
-			inlineBlock: toBlockDispatch('inlineBlock', options.inlineBlocks ?? []),
-		}),
+		schemas: toSchemaTable(
+			definitions,
+			toBlockDispatch((section, type) => {
+				const blocks: ReadonlyArray<LexicalBlockDefinition> = options[section] ?? [];
+
+				return Object.fromEntries(
+					blocks.map((block) => [block.blockType, toBlockNodeSchema(type, block.schema)]),
+				);
+			}),
+		),
 	};
-}
-
-function toBlockDispatch(
-	type: BlockNodeType,
-	blocks: ReadonlyArray<LexicalBlockDefinition>,
-): DispatchEntry<z.ZodType> {
-	const variants: Record<string, z.ZodType> = {};
-
-	for (const block of blocks) variants[block.blockType] = toBlockNodeSchema(type, block.schema);
-
-	return { key: readBlockType, variants };
 }

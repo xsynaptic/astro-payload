@@ -1,8 +1,12 @@
 import type { AstroComponentFactory } from 'astro/runtime/server/index.js';
 
-import type { ConvertersProp, CoreRichTextDefinitions, ParsedEditorState } from './definitions.ts';
+import type {
+	ConvertersProp,
+	CoreRichTextDefinitions,
+	LexicalNode,
+	ParsedEditorState,
+} from './definitions.ts';
 import type { NodeTable } from './dispatch.ts';
-import type { LexicalNode } from './schemas/lexical.ts';
 
 // Any serialized node the dispatcher can meet; the parse has vouched for its shape by then
 export interface LexicalBaseNode {
@@ -16,6 +20,7 @@ export interface ConverterProps<TNode = LexicalNode, TContext = unknown> {
 	converters: Converters;
 	dir?: 'ltr' | 'rtl';
 	node: TNode;
+	// For a converter that walks its children itself rather than rendering its slot
 	RenderNode: AstroComponentFactory;
 	style?: Record<string, string>;
 }

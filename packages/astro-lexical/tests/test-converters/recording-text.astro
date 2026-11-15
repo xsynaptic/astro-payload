@@ -1,0 +1,14 @@
+---
+import type { LexicalTextNode } from '#schemas/lexical.ts';
+import type { ConverterProps } from '#types.ts';
+
+import { renderedTexts } from './rendered-texts.ts';
+
+type Props = ConverterProps<LexicalTextNode>;
+
+const { node } = Astro.props;
+
+renderedTexts.push(node.text);
+---
+
+<em>{node.text}</em>

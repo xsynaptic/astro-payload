@@ -6,16 +6,12 @@ import { toSafeHref } from '#safe-href.ts';
 
 type Props = ConverterProps<PayloadAutolinkNode>;
 
-const { config, converters, dir, node, RenderNode } = Astro.props;
+const { config, dir, node } = Astro.props;
 
 const rel = node.fields.newTab ? 'noopener noreferrer' : undefined;
 const target = node.fields.newTab ? '_blank' : undefined;
-
-const { children } = node;
 ---
 
 <a dir={dir} href={config.siteHref(toSafeHref(node.fields.url))} rel={rel} target={target}>
-	{children.map((child) => (
-		<RenderNode config={config} converters={converters} node={child} />
-	))}
+	<slot />
 </a>

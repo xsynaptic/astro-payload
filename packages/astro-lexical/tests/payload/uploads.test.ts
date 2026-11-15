@@ -59,7 +59,32 @@ describe('describeUpload', () => {
 			sizes: undefined,
 			srcset: undefined,
 		});
-		expect(upload.kind === 'image' && upload.sizes).toBe('(max-width: 1500px) 100vw, 1500px');
+		expect(upload.kind === 'image' && upload.sizes).toBe('auto, (max-width: 1500px) 100vw, 1500px');
+	});
+
+	it('takes the sizes after `auto` from the site when it gives them', () => {
+		const upload = describeUpload(
+			{ ...photo, sizes: { card: size(600, 400) } },
+			undefined,
+			({ width }) => (width < 672 ? `${String(width)}px` : '(min-width: 44rem) 42rem, 100vw'),
+		);
+
+		expect(upload.kind === 'image' && upload.img.sizes).toBe(
+			'auto, (min-width: 44rem) 42rem, 100vw',
+		);
+	});
+
+	it('prefers alt text on the upload node over the document', () => {
+		const upload = describeUpload({ ...photo, alt: 'Document alt' }, { alt: 'Node alt' });
+
+		expect(upload.kind === 'image' && upload.alt).toBe('Node alt');
+	});
+
+	it('falls back to the document alt text when the node has none to give', () => {
+		const document = { ...photo, alt: 'Document alt' };
+
+		expect(describeUpload(document, { alt: '' })).toMatchObject({ alt: 'Document alt' });
+		expect(describeUpload(document, { alt: 42 })).toMatchObject({ alt: 'Document alt' });
 	});
 
 	it('leaves out a size Payload upscaled past the original', () => {

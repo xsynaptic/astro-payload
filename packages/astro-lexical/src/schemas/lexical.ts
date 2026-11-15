@@ -1,7 +1,6 @@
 import { z } from 'zod';
 
 import { tableCellHeader } from '#constants.ts';
-import { defineNode } from '#registry.ts';
 
 // Loose child node schema; avoids recursive Zod inference issues
 // Runtime validates shape; TypeScript types provide full recursion
@@ -135,25 +134,6 @@ export const LexicalTableCellNodeSchema = z.object({
 		.transform((span) => span || 1),
 });
 
-export const coreNodes = [
-	defineNode(LexicalTextNodeSchema),
-	defineNode(LexicalLinebreakNodeSchema),
-	defineNode(LexicalTabNodeSchema),
-	defineNode(LexicalHorizontalRuleNodeSchema),
-	defineNode(LexicalParagraphNodeSchema),
-	defineNode(LexicalHeadingNodeSchema),
-	defineNode(LexicalListNodeSchema),
-	defineNode(LexicalListItemNodeSchema),
-	defineNode(LexicalLinkNodeSchema),
-	defineNode(LexicalAutolinkNodeSchema),
-	defineNode(LexicalQuoteNodeSchema),
-	defineNode(LexicalCodeNodeSchema),
-	defineNode(LexicalCodeHighlightNodeSchema),
-	defineNode(LexicalTableNodeSchema),
-	defineNode(LexicalTableRowNodeSchema),
-	defineNode(LexicalTableCellNodeSchema),
-] as const;
-
 export const LexicalRootNodeSchema = z.object({
 	type: z.literal('root'),
 	...elementFields,
@@ -171,8 +151,6 @@ export type LexicalHeadingNode = z.infer<typeof LexicalHeadingNodeSchema>;
 export type LexicalLinkNode = z.infer<typeof LexicalLinkNodeSchema>;
 export type LexicalListItemNode = z.infer<typeof LexicalListItemNodeSchema>;
 export type LexicalListNode = z.infer<typeof LexicalListNodeSchema>;
-// No upload, relationship or block nodes; those belong to the Payload preset and the app
-export type LexicalNode = z.infer<(typeof coreNodes)[number]['schema']>;
 export type LexicalParagraphNode = z.infer<typeof LexicalParagraphNodeSchema>;
 export type LexicalQuoteNode = z.infer<typeof LexicalQuoteNodeSchema>;
 export type LexicalRootNode = z.infer<typeof LexicalRootNodeSchema>;

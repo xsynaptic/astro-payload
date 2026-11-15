@@ -82,6 +82,8 @@ export const collections = { posts };
 
 The result is `undefined` when the field is `null`, when the root is malformed or when nothing in the document would render (no nodes, only blank paragraphs, or everything dropped). So `if (!entry.data.content)` means "no content".
 
+A blank paragraph (only line breaks and whitespace) stays in the parsed data but doesn't render, and a header cell holding only blank paragraphs renders as `<td>`.
+
 The type of the parsed data records which definitions it was parsed with, and `astro:content` keeps that in the entry type. That is how the renderer knows which converters to expect.
 
 ### Map the converters
@@ -103,7 +105,24 @@ export const converters = {
 
 `ConverterMap` requires a converter for every block, every inline block, and every node you added or replaced, since a default converter may not handle your schema's shape. Defaults you left alone can be overridden but don't have to be. With `satisfies`, a misspelled or extra key is a type error. To keep a default converter for a node whose schema you replaced, pass it back from `coreConverters` (`@xsynaptic/astro-lexical/presets`) or `payloadConverters` (`@xsynaptic/astro-lexical/payload/presets`).
 
-A converter is an Astro component typed by its own node:
+A converter is an Astro component typed by its own node. A node's children arrive in its default slot:
+
+```astro
+---
+// src/components/pull-quote.astro
+import type { ConverterProps, LexicalQuoteNode } from '@xsynaptic/astro-lexical';
+
+type Props = ConverterProps<LexicalQuoteNode>;
+
+const { dir, style } = Astro.props;
+---
+
+<blockquote class="pull-quote" dir={dir} style={style}>
+	<slot />
+</blockquote>
+```
+
+A leaf, such as a block, reads `node`:
 
 ```astro
 ---
@@ -120,6 +139,36 @@ const { node, style } = Astro.props;
 ---
 
 <aside style={style}>{node.fields.body}</aside>
+```
+
+To adjust a default converter, wrap it and forward its props and slot:
+
+```astro
+---
+// src/components/link.astro
+import type { ConverterProps } from '@xsynaptic/astro-lexical';
+import type { PayloadLinkNode, PayloadRichTextConfig } from '@xsynaptic/astro-lexical/payload';
+
+import { payloadConverters } from '@xsynaptic/astro-lexical/payload/presets';
+
+type Props = ConverterProps<PayloadLinkNode> & { config: PayloadRichTextConfig };
+
+const { link: LinkConverter } = payloadConverters;
+---
+
+<span class="link">
+	<LinkConverter {...Astro.props}>
+		<slot />
+	</LinkConverter>
+</span>
+```
+
+To walk the children yourself, skip the slot and render `node.children` through `RenderNode`:
+
+```astro
+{node.children.map((child) => (
+	<RenderNode config={config} converters={converters} node={child} />
+))}
 ```
 
 ### Render
@@ -148,6 +197,8 @@ const post = await getEntry('posts', Astro.params.slug);
 ```
 
 The renderer only accepts parsed data and doesn't validate anything itself. Its types follow `data`, so `astro check` catches a raw editor state, a converter map with gaps, or core data passed to the Payload renderer. At runtime it still throws on a node with no converter, in case a cast slipped past the types. When rendering outside the content layer (a preview route, say), call `parseRichText` yourself first.
+
+If your content column is narrower than your images, pass `uploadSizes` in the config. It gets each image's `width` and `height` and returns the `sizes` value for the upload converter, such as `(min-width: 44rem) 42rem, 100vw`.
 
 ## Plain Lexical
 

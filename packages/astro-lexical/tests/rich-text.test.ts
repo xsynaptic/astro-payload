@@ -230,8 +230,17 @@ describe('payload upload and relationship', () => {
 		expect(html).toContain(
 			'srcset="/api/media/file/fixture-grey-rectangle-400x300.png 400w, /api/media/file/fixture-grey-rectangle.png 800w"',
 		);
-		expect(html).toContain('sizes="(max-width: 800px) 100vw, 800px"');
+		expect(html).toContain('sizes="auto, (max-width: 800px) 100vw, 800px"');
 		expect(html).not.toContain('<picture');
+	});
+
+	it('reads alt text from the upload node and sizes from the config', async () => {
+		const html = await renderRichText([{ ...image, fields: { alt: 'Node alt' } }], {
+			uploadSizes: ({ width }) => `${String(width / 2)}px`,
+		});
+
+		expect(html).toMatch(/<img [^>]*alt="Node alt"/);
+		expect(html).toContain('sizes="auto, 400px"');
 	});
 
 	it('wraps an image with a full-width size in another format in a picture', async () => {
@@ -247,7 +256,7 @@ describe('payload upload and relationship', () => {
 		const html = await renderRichText([withWebp]);
 
 		expect(html).toContain(
-			'<p><picture><source sizes="(max-width: 800px) 100vw, 800px" srcset="/api/media/file/fixture-grey-rectangle-400.webp 400w, /api/media/file/fixture-grey-rectangle-800.webp 800w" type="image/webp"><img ',
+			'<p><picture><source sizes="auto, (max-width: 800px) 100vw, 800px" srcset="/api/media/file/fixture-grey-rectangle-400.webp 400w, /api/media/file/fixture-grey-rectangle-800.webp 800w" type="image/webp"><img ',
 		);
 	});
 

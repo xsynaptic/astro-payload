@@ -10,11 +10,13 @@ export function isBlankInline(children: ReadonlyArray<LexicalBaseNode>) {
 	});
 }
 
+export function isBlankParagraph(node: LexicalBaseNode) {
+	return node.type === 'paragraph' && isBlankInline(toChildren(node.children));
+}
+
 // The same rule as the paragraph converter's, so a document that would render nothing reads as having no content
 export function isEmptyDocument(children: ReadonlyArray<LexicalBaseNode>) {
-	return children.every(
-		(child) => child.type === 'paragraph' && isBlankInline(toChildren(child.children)),
-	);
+	return children.every((child) => isBlankParagraph(child));
 }
 
 function toChildren(children: unknown): ReadonlyArray<LexicalBaseNode> {

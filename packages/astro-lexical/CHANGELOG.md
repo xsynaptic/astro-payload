@@ -1,5 +1,16 @@
 # @xsynaptic/astro-lexical
 
+## 0.3.0
+
+### Minor Changes
+
+- Container converters receive their children in the default slot. Breaking: a wrapper around a default container converter must forward it (`<LinkConverter {...Astro.props}><slot /></LinkConverter>`).
+- The upload converter prefers the upload node's alt text, starts its `sizes` with `auto`, and takes the rest from a new `uploadSizes` option.
+
+### Patch Changes
+
+- A table header cell holding only whitespace renders as `<td>`.
+
 ## 0.2.0
 
 ### Minor Changes
