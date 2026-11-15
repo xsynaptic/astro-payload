@@ -37,7 +37,15 @@ export const PayloadAutolinkNodeSchema = z.object({
 	}),
 });
 
-const unpopulatedError = 'Expected a populated document; read the content with depth >= 1';
+// Loose, so a converter or resolver receives the whole document
+export function payloadDocumentSchema<TShape extends z.ZodRawShape>(shape: TShape) {
+	return z
+		.looseObject(
+			{ id: documentIdSchema },
+			{ error: 'Expected a populated document; read the content with depth >= 1' },
+		)
+		.extend(shape);
+}
 
 export const uploadSizeSchema = z.object({
 	height: z.number().nullable(),
@@ -46,20 +54,16 @@ export const uploadSizeSchema = z.object({
 	width: z.number().nullable(),
 });
 
-const uploadDocSchema = z.object(
-	{
-		// Not a Payload field, but the one Payload's own converters read alt text from
-		alt: z.string().nullable().optional(),
-		filename: z.string().nullable().optional(),
-		height: z.number().nullable().optional(),
-		id: documentIdSchema,
-		mimeType: z.string(),
-		sizes: z.record(z.string(), uploadSizeSchema).nullable().optional(),
-		url: z.string(),
-		width: z.number().nullable().optional(),
-	},
-	{ error: unpopulatedError },
-);
+const uploadDocSchema = payloadDocumentSchema({
+	// Not a Payload field, but the one Payload's own converters read alt text from
+	alt: z.string().nullable().optional(),
+	filename: z.string().nullable().optional(),
+	height: z.number().nullable().optional(),
+	mimeType: z.string(),
+	sizes: z.record(z.string(), uploadSizeSchema).nullable().optional(),
+	url: z.string(),
+	width: z.number().nullable().optional(),
+});
 
 // The renderer reads alignment off the parsed node, so the schema must keep `format`
 const decoratorFormat = elementFields.format.optional();
@@ -75,14 +79,11 @@ export const PayloadUploadNodeSchema = z.object({
 	version: z.number().optional(),
 });
 
-// Loose, so the resolver receives the whole document
-const relationshipDocSchema = z.looseObject({ id: documentIdSchema }, { error: unpopulatedError });
-
 export const PayloadRelationshipNodeSchema = z.object({
 	format: decoratorFormat,
 	relationTo: z.string(),
 	type: z.literal('relationship'),
-	value: relationshipDocSchema.nullable(),
+	value: payloadDocumentSchema({}).nullable(),
 	version: z.number().optional(),
 });
 

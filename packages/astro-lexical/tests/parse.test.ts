@@ -10,6 +10,7 @@ import { defineRichText } from '#definitions.ts';
 import { addRichTextIssues } from '#issues.ts';
 import { parseRichText } from '#parse.ts';
 import { definePayloadRichText } from '#payload/definitions.ts';
+import { payloadDocumentSchema, PayloadRelationshipNodeSchema } from '#payload/schemas.ts';
 import { defineNode } from '#registry.ts';
 import { coreNodes, elementFields } from '#schemas/lexical.ts';
 import checkList from '#tests/fixtures/check-list.json' with { type: 'json' };
@@ -200,6 +201,14 @@ describe('parseRichText', () => {
 		]);
 	});
 
+	it.each([
+		// eslint-disable-next-line unicorn/no-null -- an untouched editor field is stored as `null`
+		['null', null],
+		['undefined', undefined],
+	])('reads a %s field as no content rather than a malformed root', (_name, value) => {
+		expect(parseRichText(coreRichText, value)).toEqual({ data: undefined, issues: [] });
+	});
+
 	it('returns no data for a value that is not an editor state', () => {
 		expect(parseRichText(coreRichText, 'plain text')).toMatchObject({
 			data: undefined,
@@ -257,6 +266,22 @@ describe('parseRichText with the Payload definitions', () => {
 			{ nodeLabel: 'upload', paths: ['value'] },
 			{ nodeLabel: 'relationship', paths: ['value'] },
 		]);
+		expect(issues[0]?.kind === 'invalid' && issues[0].issues[0]?.message).toMatch(/depth >= 1/);
+	});
+
+	it('keeps the populated check on a value extended through payloadDocumentSchema', () => {
+		const titled = definePayloadRichText({
+			nodes: [
+				defineNode(
+					PayloadRelationshipNodeSchema.extend({
+						value: payloadDocumentSchema({ id: z.number(), title: z.string() }).nullable(),
+					}),
+				),
+			],
+		});
+		const relationship = depthZero.root.children.find((node) => node.type === 'relationship');
+		const { issues } = parseRichText(titled, editorState([relationship]));
+
 		expect(issues[0]?.kind === 'invalid' && issues[0].issues[0]?.message).toMatch(/depth >= 1/);
 	});
 

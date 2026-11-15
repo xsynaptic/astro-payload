@@ -15,6 +15,10 @@ export { addRichTextIssues, createIssueReporter } from './issues.ts';
 
 export type { RichTextIssue } from './issues.ts';
 
+export { parseRichTextField } from './parse-field.ts';
+
+export type { RichTextFieldOptions } from './parse-field.ts';
+
 export { parseRichText } from './parse.ts';
 
 export type { RichTextParseResult } from './parse.ts';

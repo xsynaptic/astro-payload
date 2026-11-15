@@ -1,5 +1,9 @@
 export type { ConverterMap, ParsedEditorState } from '#definitions.ts';
 
+export { parseRichTextField } from '#parse-field.ts';
+
+export type { RichTextFieldOptions } from '#parse-field.ts';
+
 export { parseRichText } from '#parse.ts';
 
 export type { RichTextParseResult } from '#parse.ts';
@@ -16,6 +20,7 @@ export type { InternalLinkTarget } from './links.ts';
 
 export {
 	PayloadAutolinkNodeSchema,
+	payloadDocumentSchema,
 	PayloadLinkNodeSchema,
 	payloadNodes,
 	PayloadRelationshipNodeSchema,

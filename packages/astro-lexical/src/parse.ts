@@ -32,6 +32,8 @@ export function parseRichText<T extends RichTextDefinitions>(
 	definitions: T,
 	value: unknown,
 ): RichTextParseResult<T> {
+	if (value === null || value === undefined) return { data: undefined, issues: [] };
+
 	const state = editorStateSchema.safeParse(value);
 
 	if (!state.success) {
