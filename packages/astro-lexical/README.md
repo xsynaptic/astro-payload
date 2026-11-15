@@ -43,45 +43,44 @@ export const richText = definePayloadRichText({
 
 `definePayloadRichText` starts from the core Lexical nodes plus Payload's text, link, autolink, upload and relationship nodes. `defineRichText` (from `@xsynaptic/astro-lexical`) starts from the core nodes alone. A node you pass replaces the default with the same `type`. Blocks and inline blocks (`inlineBlocks`) are matched by `fields.blockType`.
 
-Node and block schemas must be synchronous `z.object` schemas with a literal `type` (or `blockType`). The built-in schemas (`LexicalHeadingNodeSchema`, `PayloadUploadNodeSchema` and the rest) are exported so you can extend them.
+Node and block schemas must be synchronous `z.object` schemas with a literal `type` (or `blockType`). The built-in schemas (`LexicalHeadingNodeSchema`, `PayloadUploadNodeSchema` and the rest) are exported so you can extend them. To extend an upload or relationship `value`, build it with `payloadDocumentSchema` so it still rejects an unpopulated document.
 
 ### Parse in a content schema
 
 ```ts
 // src/content.config.ts
-import { addRichTextIssues, createIssueReporter } from '@xsynaptic/astro-lexical';
-import { parseRichText } from '@xsynaptic/astro-lexical/payload';
+import { parseRichTextField } from '@xsynaptic/astro-lexical/payload';
 import { defineCollection } from 'astro:content';
 import { glob } from 'astro/loaders';
 import { z } from 'zod';
 
 import { richText } from './lib/rich-text.ts';
 
-const warn = createIssueReporter();
-
 const posts = defineCollection({
 	loader: glob({ base: './src/content/posts', pattern: '**/*.json' }),
 	schema: z
 		.object({ content: z.unknown(), slug: z.string(), title: z.string() })
 		.transform((entry, context) => {
-			const { data, issues } = parseRichText(richText, entry.content);
+			const content = parseRichTextField(richText, entry.content, {
+				context,
+				documentLabel: `posts/${entry.slug}`,
+				path: ['content'],
+				strict: import.meta.env.PROD,
+			});
 
-			if (import.meta.env.PROD) addRichTextIssues(context, issues, { path: ['content'] });
-			else warn(issues, { documentLabel: `posts/${entry.slug}` });
-
-			return { ...entry, content: data };
+			return { ...entry, content };
 		}),
 });
 
 export const collections = { posts };
 ```
 
-`parseRichText` walks the whole tree. A node that fails its schema, or has no definition, is dropped along with its children, while its siblings and parent are kept. Each dropped node becomes an issue with a label (`block:callout`) and a path (`root.children.3.children.1`). Nothing is reported for you; you decide what happens to the issues:
+`parseRichText` walks the whole tree. A node that fails its schema, or has no definition, is dropped along with its children, while its siblings and parent are kept. Each dropped node becomes an issue with a label (`block:callout`) and a path (`root.children.3.children.1`). With `strict`, the issues fail the build; without it, they warn:
 
-- **Strict:** `addRichTextIssues` turns each one into a Zod issue, so Astro fails the build and lists every bad node across all entries. The `path` option prefixes each issue; leave it out when the transform is on the `content` field itself, since Zod adds the key there.
-- **Lenient:** `createIssueReporter()` returns a function that logs a warning, once per kind of bad node in each document.
+- **Strict:** each issue becomes a Zod issue, so Astro fails the build and lists every bad node across all entries. The `path` option prefixes each issue; leave it out when the transform is on the `content` field itself, since Zod adds the key there.
+- **Lenient:** each issue logs a warning naming `documentLabel`, once per kind of bad node in each document.
 
-`data` is `undefined` when the root is malformed or when nothing in the document would render (no nodes, only blank paragraphs, or everything dropped). So `if (!entry.data.content)` means "no content".
+The result is `undefined` when the field is `null`, when the root is malformed or when nothing in the document would render (no nodes, only blank paragraphs, or everything dropped). So `if (!entry.data.content)` means "no content".
 
 The type of the parsed data records which definitions it was parsed with, and `astro:content` keeps that in the entry type. That is how the renderer knows which converters to expect.
 

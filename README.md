@@ -2,6 +2,10 @@
 
 Astro packages for sites built on [Payload CMS](https://payloadcms.com/), published via npm under the `@xsynaptic` scope.
 
+## Packages
+
+- [`@xsynaptic/astro-lexical`](./packages/astro-lexical): render Lexical rich text in Astro, with a Payload preset
+
 ## Development
 
 ```sh
