@@ -65,7 +65,7 @@
 		"@lexical/table": "0.50.0",
 		"@payloadcms/richtext-lexical": "3.93.0",
 		"@types/node": "^24.19.2",
-		"astro": "^7.4.5",
+		"astro": "^7.4.12",
 		"lexical": "0.50.0",
 		"payload": "3.93.0",
 		"typescript": "^6.0.3",

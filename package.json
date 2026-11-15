@@ -36,7 +36,7 @@
 		"@manypkg/get-packages": "^3.1.0",
 		"@types/node": "^24.19.2",
 		"@xsynaptic/eslint-config": "^6.8.0",
-		"eslint": "^10.14.0",
+		"eslint": "^10.15.0",
 		"jiti": "^2.7.0",
 		"knip": "^6.44.1",
 		"lefthook": "^2.2.2",
