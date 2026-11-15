@@ -1,12 +1,11 @@
 import { experimental_AstroContainer as AstroContainer } from 'astro/container';
 import { describe, expect, it } from 'vitest';
 
-import type { RenderIssue } from '#issues.ts';
 import type { PayloadRichTextConfig } from '#payload/types.ts';
 
-import { payloadPreset } from '#payload/presets.ts';
+import { parseRichText } from '#parse.ts';
+import { definePayloadRichText } from '#payload/definitions.ts';
 import PayloadRichText from '#payload/rich-text.astro';
-import { corePreset } from '#presets.ts';
 
 import textState from './fixtures/text-state.json' with { type: 'json' };
 
@@ -22,21 +21,19 @@ async function renderTextState(
 	children: Array<unknown>,
 	config: Partial<PayloadRichTextConfig> = {},
 ) {
-	const issues: Array<RenderIssue> = [];
+	const { data, issues } = parseRichText(definePayloadRichText(), {
+		root: { ...textState.root, children },
+	});
 	const container = await AstroContainer.create();
 	const html = await container.renderToString(PayloadRichText, {
 		props: {
 			config: {
 				context: undefined,
 				internalDocToHref: () => '/internal',
-				onIssue: (issue: RenderIssue) => {
-					issues.push(issue);
-				},
 				siteHref: (href: string) => href,
 				...config,
 			},
-			converters: { ...corePreset, ...payloadPreset },
-			data: { root: { ...textState.root, children } },
+			data,
 		},
 	});
 

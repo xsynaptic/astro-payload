@@ -1,18 +1,22 @@
 ---
-import type { RichTextConfig, RichTextProps } from './types.ts';
+import type { ConverterMapShape, CoreRichTextDefinitions } from './definitions.ts';
+import type { Converters, RichTextConfig, RichTextProps } from './types.ts';
 
-import { corePreset } from './presets.ts';
+import { coreConverters } from './presets.ts';
 import RenderNode from './render-node.astro';
 
-type Props = RichTextProps;
+type Props<T extends CoreRichTextDefinitions = CoreRichTextDefinitions> = RichTextProps<T>;
 
-const { config: options, converters = corePreset, data } = Astro.props;
+const { config: options, data } = Astro.props;
+const map: ConverterMapShape | undefined = Astro.props.converters;
 
 const config: RichTextConfig = {
 	...options,
 	context: options?.context,
 	siteHref: options?.siteHref ?? ((href) => href),
 };
+
+const converters: Converters = { dispatch: {}, nodes: { ...coreConverters, ...map?.nodes } };
 ---
 
 {data.root.children.map((node) => (

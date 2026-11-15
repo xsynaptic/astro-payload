@@ -1,25 +1,21 @@
-import type { AstroComponentFactory } from 'astro/runtime/server/index.js';
-
 import { experimental_AstroContainer as AstroContainer } from 'astro/container';
 import { describe, expect, it } from 'vitest';
-import { z } from 'zod';
 
-import type { RenderIssue } from '#issues.ts';
+import type { ConverterMapShape } from '#definitions.ts';
 import type { InternalLinkTarget } from '#payload/links.ts';
 import type { PayloadRichTextConfig } from '#payload/types.ts';
-import type { Converters, LexicalBaseNode, RichTextConfig } from '#types.ts';
 
 import HeadingConverter from '#converters/heading.astro';
-import { payloadPreset } from '#payload/presets.ts';
+import { parseRichText } from '#parse.ts';
+import { definePayloadRichText } from '#payload/definitions.ts';
 import PayloadRichText from '#payload/rich-text.astro';
 import { PayloadUploadNodeSchema } from '#payload/schemas.ts';
-import { corePreset } from '#presets.ts';
-import { buildConverters, defineNode } from '#registry.ts';
+import { coreConverters } from '#presets.ts';
 import RenderNode from '#render-node.astro';
-import { resolveNode } from '#render-node.ts';
 import RichText from '#rich-text.astro';
+import { coreRichText, renderCore } from '#tests/render-test-utils.ts';
+import ShikiCodeConverter from '#tests/test-converters/shiki-code.astro';
 
-import depthZero from './payload/fixtures/upload-relationship-depth-0.json' with { type: 'json' };
 import depthOne from './payload/fixtures/upload-relationship-depth-1.json' with { type: 'json' };
 
 // eslint-disable-next-line unicorn/no-null -- Lexical serializes an unset direction as `null`
@@ -43,7 +39,7 @@ function paragraph(...children: Array<unknown>) {
 	return { ...element, children, type: 'paragraph' };
 }
 
-const payloadConverters: Converters = { ...corePreset, ...payloadPreset };
+const payloadRichText = definePayloadRichText();
 
 function webpSize(width: number, height: number) {
 	return {
@@ -60,10 +56,18 @@ function root(children: Array<unknown>) {
 	return { root: { ...element, children, type: 'root' } };
 }
 
+function parsed(definitions: Parameters<typeof parseRichText>[0], children: Array<unknown>) {
+	const { data, issues } = parseRichText(definitions, root(children));
+	if (!data || issues.length > 0)
+		throw new Error(`fixture failed to parse: ${JSON.stringify(issues)}`);
+
+	return data;
+}
+
 async function renderRichText(
 	children: Array<unknown>,
 	config: Partial<PayloadRichTextConfig> = {},
-	converters: Converters = payloadConverters,
+	converters?: ConverterMapShape,
 ) {
 	const container = await AstroContainer.create();
 
@@ -76,19 +80,7 @@ async function renderRichText(
 				...config,
 			},
 			converters,
-			data: root(children),
-		},
-	});
-}
-
-async function renderCore(children: Array<unknown>, config: Partial<RichTextConfig> = {}) {
-	const container = await AstroContainer.create();
-
-	return container.renderToString(RichText, {
-		props: {
-			config: { context: undefined, siteHref: (href: string) => href, ...config },
-			converters: corePreset,
-			data: root(children),
+			data: parsed(payloadRichText, children),
 		},
 	});
 }
@@ -101,25 +93,12 @@ describe('heading tag', () => {
 		type: 'heading',
 	};
 
-	it('drops a heading whose tag is not a heading element and reports it', async () => {
-		const invalid: Array<LexicalBaseNode> = [];
-		const html = await renderCore([scriptHeading], {
-			onIssue: ({ node }) => {
-				invalid.push(node);
-			},
-		});
-
-		expect(html).not.toContain('<script');
-		expect(html).not.toContain('alert(document.domain)');
-		expect(invalid).toEqual([scriptHeading]);
-	});
-
 	it('never takes the element name from the node, even with no schema in front of it', async () => {
 		const container = await AstroContainer.create();
 		const html = await container.renderToString(HeadingConverter, {
 			props: {
 				config: { context: undefined, siteHref: (href: string) => href },
-				converters: corePreset,
+				converters: { dispatch: {}, nodes: coreConverters },
 				node: scriptHeading,
 				RenderNode,
 			},
@@ -130,7 +109,7 @@ describe('heading tag', () => {
 	});
 
 	it('renders an allowed tag as authored', async () => {
-		const html = await renderCore([{ ...scriptHeading, children: [text('Title')], tag: 'h3' }]);
+		const { html } = await renderCore([{ ...scriptHeading, children: [text('Title')], tag: 'h3' }]);
 
 		expect(html).toMatch(/<h3[^>]*>Title<\/h3>/);
 	});
@@ -238,31 +217,6 @@ describe('payload link href', () => {
 	});
 });
 
-describe('upstream link', () => {
-	it('drops a link in the Payload shape, which the core preset does not accept', async () => {
-		const invalid: Array<LexicalBaseNode> = [];
-		const html = await renderCore([paragraph(payloadLink('link', '/about'))], {
-			onIssue: ({ node }) => {
-				invalid.push(node);
-			},
-		});
-
-		expect(html).not.toContain('<a');
-		expect(invalid).toHaveLength(1);
-	});
-});
-
-function collectIssues() {
-	const issues: Array<RenderIssue> = [];
-
-	return {
-		issues,
-		onIssue: (issue: RenderIssue) => {
-			issues.push(issue);
-		},
-	};
-}
-
 describe('payload upload and relationship', () => {
 	const [image, file, relationship] = depthOne.root.children;
 
@@ -349,75 +303,15 @@ describe('payload upload and relationship', () => {
 		},
 	);
 
-	it('renders nothing and reports nothing for a target Payload populated as null', async () => {
-		const { issues, onIssue } = collectIssues();
+	it('renders nothing for a target Payload populated as null', async () => {
 		const missing = [image, relationship].map((node) => ({
 			...node,
 			// eslint-disable-next-line unicorn/no-null -- Payload writes `null` for a deleted or unpublished target
 			value: null,
 		}));
-		const html = await renderRichText(missing, { onIssue });
+		const html = await renderRichText(missing);
 
 		expect(html.trim()).toBe('');
-		expect(issues).toEqual([]);
-	});
-
-	it('reports every unpopulated value as invalid at `value` and renders none of them', async () => {
-		const { issues, onIssue } = collectIssues();
-		const html = await renderRichText(depthZero.root.children, { onIssue });
-
-		expect(html.trim()).toBe('');
-		expect(
-			issues.map((issue) => ({
-				kind: issue.kind,
-				nodeLabel: issue.nodeLabel,
-				paths: issue.kind === 'invalid' ? issue.issues.map(({ path }) => path.join('.')) : [],
-			})),
-		).toEqual([
-			{ kind: 'invalid', nodeLabel: 'upload', paths: ['value'] },
-			{ kind: 'invalid', nodeLabel: 'upload', paths: ['value'] },
-			{ kind: 'invalid', nodeLabel: 'relationship', paths: ['value'] },
-		]);
-		expect(issues[0]?.kind === 'invalid' && issues[0].issues[0]?.message).toMatch(/depth >= 1/);
-	});
-
-	it('keeps the extra upload fields for an app converter under the preset schema', () => {
-		if (!image) throw new Error('fixture has no image upload');
-		const AppUploadConverter = (() => 'app upload') as unknown as AstroComponentFactory;
-		const converters = {
-			...payloadConverters,
-			upload: { converter: AppUploadConverter, schema: PayloadUploadNodeSchema },
-		};
-
-		expect(resolveNode(image, converters, {}).node).toMatchObject({
-			fields: { caption: 'A synthetic caption', credit: 'Test credit' },
-			relationTo: 'media',
-		});
-	});
-
-	it('hands an unpopulated value to an app converter spread after the preset, under its own schema', () => {
-		const { issues, onIssue } = collectIssues();
-		const AppUploadConverter = (() => 'app upload') as unknown as AstroComponentFactory;
-		const AppUploadNodeSchema = z.object({
-			type: z.literal('upload'),
-			value: z.union([z.number(), z.string()]),
-		});
-		const converters = {
-			...payloadConverters,
-			...buildConverters({
-				nodeConverters: { upload: AppUploadConverter },
-				nodes: [defineNode(AppUploadNodeSchema)],
-			}),
-		};
-
-		const [bareUpload] = depthZero.root.children;
-		if (!bareUpload) throw new Error('fixture has no upload node');
-
-		expect(resolveNode(bareUpload, converters, { onIssue })).toEqual({
-			converter: AppUploadConverter,
-			node: { type: 'upload', value: 274 },
-		});
-		expect(issues).toEqual([]);
 	});
 });
 
@@ -428,7 +322,7 @@ describe('defaults', () => {
 	it('renders core nodes from the data alone', async () => {
 		const container = await AstroContainer.create();
 		const html = await container.renderToString(RichText, {
-			props: { data: root([heading, paragraph(upstreamLink)]) },
+			props: { data: parsed(coreRichText, [heading, paragraph(upstreamLink)]) },
 		});
 
 		expect(html).toMatch(/<h2>Title<\/h2>\s*<p><a href="\/about">About<\/a><\/p>/);
@@ -437,26 +331,25 @@ describe('defaults', () => {
 	it('falls back to the identity siteHref when a caller passes it as undefined', async () => {
 		const container = await AstroContainer.create();
 		const html = await container.renderToString(RichText, {
-			props: { config: { siteHref: undefined }, data: root([paragraph(upstreamLink)]) },
+			props: {
+				config: { siteHref: undefined },
+				data: parsed(coreRichText, [paragraph(upstreamLink)]),
+			},
 		});
 
 		expect(html).toContain('<a href="/about">About</a>');
 	});
 
-	it('replaces the core preset with a passed map instead of merging into it', async () => {
-		const { issues, onIssue } = collectIssues();
-		const container = await AstroContainer.create();
-		const html = await container.renderToString(RichText, {
-			props: {
-				config: { onIssue },
-				converters: { heading: corePreset.heading, text: corePreset.text },
-				data: root([heading, paragraph(text('Body'))]),
-			},
-		});
+	it('lays a passed converter over the defaults rather than replacing them', async () => {
+		const codeBlock = { ...element, children: [], language: 'javascript', type: 'code' };
+		const { html } = await renderCore(
+			[heading, codeBlock],
+			{},
+			{ nodes: { code: ShikiCodeConverter } },
+		);
 
 		expect(html).toMatch(/<h2>Title<\/h2>/);
-		expect(html).not.toContain('Body');
-		expect(issues).toMatchObject([{ kind: 'unknown', nodeLabel: 'paragraph' }]);
+		expect(html).toContain('astro-code');
 	});
 
 	it('renders Payload nodes through the Payload RichText with only its config', async () => {
@@ -468,7 +361,7 @@ describe('defaults', () => {
 					internalDocToHref: () => '/internal',
 					siteHref: (href: string) => href,
 				},
-				data: root([paragraph(payloadLink('link', '/about'))]),
+				data: parsed(payloadRichText, [paragraph(payloadLink('link', '/about'))]),
 			},
 		});
 

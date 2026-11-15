@@ -2,11 +2,24 @@ export { tableCellHeader, textFormat } from './constants.ts';
 
 export { getCodeText } from './converters/code.ts';
 
-export { createIssueReporter } from './issues.ts';
+export { defineRichText } from './definitions.ts';
 
-export type { IssueReporterOptions, RenderIssue } from './issues.ts';
+export type {
+	ConverterMap,
+	CoreRichTextDefinitions,
+	ParsedEditorState,
+	RichTextDefinitions,
+} from './definitions.ts';
 
-export { buildConverters, defineNode } from './registry.ts';
+export { addRichTextIssues, createIssueReporter } from './issues.ts';
+
+export type { RichTextIssue } from './issues.ts';
+
+export { parseRichText } from './parse.ts';
+
+export type { RichTextParseResult } from './parse.ts';
+
+export { defineNode } from './registry.ts';
 
 export type { LexicalNodeDefinition } from './registry.ts';
 
@@ -52,10 +65,8 @@ export type {
 } from './schemas/lexical.ts';
 
 export type {
-	ConverterEntry,
 	ConverterProps,
 	Converters,
-	DispatchEntry,
 	LexicalBaseNode,
 	RichTextConfig,
 	RichTextProps,

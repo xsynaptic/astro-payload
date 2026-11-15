@@ -1,43 +1,54 @@
 import type { z } from 'zod';
 
-import type { LexicalBaseNode } from './types.ts';
+export type RichTextIssue = (
+	{ issues: Array<z.core.$ZodIssue>; kind: 'invalid' | 'malformed' } | { kind: 'unknown' }
+) & { node: unknown; nodeLabel: string; path: Array<number | string> };
 
-export type RenderIssue = { documentLabel?: string; node: LexicalBaseNode; nodeLabel: string } & (
-	{ issues: Array<z.core.$ZodIssue>; kind: 'invalid' } | { kind: 'unknown' }
-);
-
-export interface IssueReporterOptions {
-	// Throwing lets a static build fail rather than publish a page with content silently missing
-	strict?: boolean;
+export function addRichTextIssues(
+	context: Pick<z.core.$RefinementCtx, 'addIssue'>,
+	issues: ReadonlyArray<RichTextIssue>,
+	{ path = [] }: { path?: ReadonlyArray<PropertyKey> } = {},
+): void {
+	for (const issue of issues) {
+		context.addIssue({
+			code: 'custom',
+			input: issue.node,
+			message: describeIssue(issue),
+			path: [...path, ...issue.path],
+		});
+	}
 }
 
-export function createIssueReporter({ strict = false }: IssueReporterOptions = {}) {
-	// Warns once per document and node; the same drift otherwise repeats on every render of that document
+export function createIssueReporter() {
+	// A drifted schema fails every node of its type, so one warning per document says enough
 	const warned = new Set<string>();
 
-	return (issue: RenderIssue): void => {
-		const message = describeIssue(issue);
+	return (
+		issues: ReadonlyArray<RichTextIssue>,
+		{ documentLabel }: { documentLabel?: string } = {},
+	): void => {
+		for (const issue of issues) {
+			const key = `${issue.kind}:${issue.nodeLabel}:${documentLabel ?? ''}`;
+			if (warned.has(key)) continue;
+			warned.add(key);
 
-		if (strict) throw new Error(message);
+			const where = documentLabel ? ` in ${documentLabel}` : '';
 
-		const key = `${issue.kind}:${issue.nodeLabel}:${issue.documentLabel ?? ''}`;
-		if (warned.has(key)) return;
-		warned.add(key);
-
-		console.warn(message);
+			console.warn(`[lexical] ${describeIssue(issue)}${where}`);
+		}
 	};
 }
 
-function describeIssue(issue: RenderIssue): string {
-	const where = issue.documentLabel ? ` in ${issue.documentLabel}` : '';
+function describeIssue(issue: RichTextIssue): string {
+	const at = issue.path.length > 0 ? ` at ${issue.path.join('.')}` : '';
 
-	if (issue.kind === 'unknown') {
-		return `[lexical] no converter for node "${issue.nodeLabel}"${where}`;
-	}
+	if (issue.kind === 'unknown') return `no definition for node "${issue.nodeLabel}"${at}`;
 
 	const details = issue.issues
-		.map((zodIssue) => `${zodIssue.path.join('.')}: ${zodIssue.message}`)
+		.map((zodIssue) => `${zodIssue.path.join('.') || '(node)'}: ${zodIssue.message}`)
 		.join('; ');
 
-	return `[lexical] node "${issue.nodeLabel}" failed validation${where}, so its schema may be out of date. ${details}`;
+	if (issue.kind === 'malformed') return `malformed node${at}. ${details}`;
+
+	return `node "${issue.nodeLabel}"${at} failed validation, so its schema may be out of date. ${details}`;
 }

@@ -17,11 +17,9 @@ import TableCellConverter from './converters/table-cell.astro';
 import TableRowConverter from './converters/table-row.astro';
 import TableConverter from './converters/table.astro';
 import TextConverter from './converters/text.astro';
-import { buildConverters } from './registry.ts';
-import { coreNodes } from './schemas/lexical.ts';
 
 // Exhaustive over the core nodes, so a node added to the list cannot ship without a converter
-const coreConverters = {
+export const coreConverters = {
 	autolink: LinkConverter,
 	code: CodeConverter,
 	'code-highlight': CodeHighlightConverter,
@@ -39,6 +37,3 @@ const coreConverters = {
 	tablerow: TableRowConverter,
 	text: TextConverter,
 } satisfies Record<LexicalNode['type'], AstroComponentFactory>;
-
-// Every node is validated at render; stored content can predate or bypass the editor's own validation
-export const corePreset = buildConverters({ nodeConverters: coreConverters, nodes: coreNodes });

@@ -1,14 +1,33 @@
 ---
-import { corePreset } from '#presets.ts';
-import RichText from '#rich-text.astro';
+import type { ConverterMapShape } from '#definitions.ts';
+import type { Converters } from '#types.ts';
 
+import { coreConverters } from '#presets.ts';
+import RenderNode from '#render-node.astro';
+
+import type { PayloadRichTextDefinitions } from './definitions.ts';
 import type { PayloadRichTextProps } from './types.ts';
 
-import { payloadPreset } from './presets.ts';
+import { readBlockType } from './blocks.ts';
+import { payloadConverters } from './presets.ts';
 
-type Props<TContext = unknown> = PayloadRichTextProps<TContext>;
+type Props<
+	T extends PayloadRichTextDefinitions = PayloadRichTextDefinitions,
+	TContext = unknown,
+> = PayloadRichTextProps<T, TContext>;
 
-const { config, converters = { ...corePreset, ...payloadPreset }, data } = Astro.props;
+const { config, data } = Astro.props;
+const map: ConverterMapShape | undefined = Astro.props.converters;
+
+const converters: Converters = {
+	dispatch: {
+		block: { key: readBlockType, variants: map?.blocks ?? {} },
+		inlineBlock: { key: readBlockType, variants: map?.inlineBlocks ?? {} },
+	},
+	nodes: { ...coreConverters, ...payloadConverters, ...map?.nodes },
+};
 ---
 
-<RichText config={config} converters={converters} data={data} />
+{data.root.children.map((node) => (
+	<RenderNode config={config} converters={converters} node={node} />
+))}

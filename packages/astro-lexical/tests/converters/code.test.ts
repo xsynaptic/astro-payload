@@ -2,9 +2,6 @@ import { fc, test as propertyTest } from '@fast-check/vitest';
 import { describe, expect, it } from 'vitest';
 
 import { getCodeText } from '#converters/code.ts';
-import { corePreset } from '#presets.ts';
-import { buildConverters } from '#registry.ts';
-import { coreNodes } from '#schemas/lexical.ts';
 import code from '#tests/fixtures/code.json' with { type: 'json' };
 import { element, renderCore } from '#tests/render-test-utils.ts';
 import ShikiCodeConverter from '#tests/test-converters/shiki-code.astro';
@@ -119,12 +116,8 @@ describe('code', () => {
 
 	it('hands a site converter the block text in place of the default', async () => {
 		const blocks = [withLanguage, withoutLanguage];
-		const converters = {
-			...corePreset,
-			...buildConverters({ nodeConverters: { code: ShikiCodeConverter }, nodes: coreNodes }),
-		};
 		const { html: defaultHtml } = await renderCore(blocks);
-		const { html, issues } = await renderCore(blocks, {}, converters);
+		const { html, issues } = await renderCore(blocks, {}, { nodes: { code: ShikiCodeConverter } });
 
 		expect(issues).toEqual([]);
 		expect(html).not.toBe(defaultHtml);

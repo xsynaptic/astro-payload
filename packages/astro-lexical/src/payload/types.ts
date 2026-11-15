@@ -1,6 +1,7 @@
-import type { LexicalEditorState } from '#schemas/lexical.ts';
-import type { Converters, RichTextConfig } from '#types.ts';
+import type { ConvertersProp, ParsedEditorState } from '#definitions.ts';
+import type { RichTextConfig } from '#types.ts';
 
+import type { PayloadRichTextDefinitions } from './definitions.ts';
 import type { InternalLinkTarget } from './links.ts';
 
 export interface PayloadRichTextConfig<TContext = unknown> extends RichTextConfig<TContext> {
@@ -9,8 +10,10 @@ export interface PayloadRichTextConfig<TContext = unknown> extends RichTextConfi
 }
 
 // The core RichText accepts any config, so only the Payload RichText makes a missing resolver a type error
-export interface PayloadRichTextProps<TContext = unknown> {
+export type PayloadRichTextProps<
+	T extends PayloadRichTextDefinitions = PayloadRichTextDefinitions,
+	TContext = unknown,
+> = ConvertersProp<T> & {
 	config: PayloadRichTextConfig<TContext>;
-	converters?: Converters;
-	data: LexicalEditorState;
-}
+	data: ParsedEditorState<T>;
+};

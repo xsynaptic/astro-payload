@@ -61,9 +61,13 @@ const uploadDocSchema = z.object(
 	{ error: unpopulatedError },
 );
 
+// The renderer reads alignment off the parsed node, so the schema must keep `format`
+const decoratorFormat = elementFields.format.optional();
+
 export const PayloadUploadNodeSchema = z.object({
 	// Unread by the preset converter; a site's own reads its caption from here
 	fields: z.record(z.string(), z.unknown()).optional(),
+	format: decoratorFormat,
 	id: z.string().optional(),
 	relationTo: z.string(),
 	type: z.literal('upload'),
@@ -75,19 +79,24 @@ export const PayloadUploadNodeSchema = z.object({
 const relationshipDocSchema = z.looseObject({ id: documentIdSchema }, { error: unpopulatedError });
 
 export const PayloadRelationshipNodeSchema = z.object({
+	format: decoratorFormat,
 	relationTo: z.string(),
 	type: z.literal('relationship'),
 	value: relationshipDocSchema.nullable(),
 	version: z.number().optional(),
 });
 
-export type BlockNodeType = 'block' | 'inlineBlock';
+// An inline block is a plain decorator node, which serializes no alignment
+const blockNodeFields = { block: { format: decoratorFormat }, inlineBlock: {} };
+
+export type BlockNodeType = keyof typeof blockNodeFields;
 
 export function toBlockNodeSchema<TType extends BlockNodeType, TFields extends z.ZodType>(
 	type: TType,
 	fields: TFields,
 ) {
 	return z.object({
+		...blockNodeFields[type],
 		fields,
 		type: z.literal(type),
 		version: z.number().optional(),
@@ -101,6 +110,8 @@ export const payloadNodes = [
 	defineNode(PayloadUploadNodeSchema),
 	defineNode(PayloadRelationshipNodeSchema),
 ] as const;
+
+export type PayloadNodeType = (typeof payloadNodes)[number]['type'];
 
 export type PayloadAutolinkNode = z.infer<typeof PayloadAutolinkNodeSchema>;
 export type PayloadLinkNode = z.infer<typeof PayloadLinkNodeSchema>;
